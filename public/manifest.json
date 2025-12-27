@@ -1,0 +1,66 @@
+{
+  "name": "FileConverter - Free Online File Conversion Tools",
+  "short_name": "FileConverter",
+  "description": "Convert images to WebP, JPG, PNG and more. All processing happens in your browser — fast, secure, and private.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+
+  "categories": ["productivity", "utilities"],
+
+  "icons": [
+    {
+      "src": "/logos/logo-96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/logos/logo-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/logos/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logos/logo-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/logos/logo-384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/logos/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+
+  "screenshots": [
+    {
+      "src": "/screenshot/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Convert and optimize images directly in your browser"
+    },
+    {
+      "src": "/screenshot/screenshot-narrow.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Fast image conversion on mobile devices"
+    }
+  ]
+}
