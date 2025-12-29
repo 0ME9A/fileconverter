@@ -1,6 +1,6 @@
-import { faq } from "../ts";
+import { TFaq } from "../ts";
 
-export const faqs: faq[] = [
+export const faqs: TFaq[] = [
   {
     question: "Is FileConverter really free?",
     answer:
