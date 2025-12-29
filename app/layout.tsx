@@ -21,11 +21,11 @@ export const metadata: Metadata = metadataDefault;
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -44,3 +44,29 @@ export default function RootLayout({
     </html>
   );
 }
+
+// export default function RootLayout({
+//   children,
+// }: Readonly<{
+//   children: React.ReactNode;
+// }>) {
+//   return (
+//     <html lang="en">
+//       <body
+//         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+//       >
+//         <ThemeProvider
+//           attribute="class"
+//           defaultTheme="system"
+//           enableSystem
+//           disableTransitionOnChange
+//         >
+//           <Navbar />
+//           {children}
+//           <Footer />
+//         </ThemeProvider>
+//         <Analytics />
+//       </body>
+//     </html>
+//   );
+// }

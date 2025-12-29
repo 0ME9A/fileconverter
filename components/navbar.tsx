@@ -13,13 +13,13 @@ export default function Navbar() {
           </Link>
           <div className="flex items-center gap-6">
             <Link
-              href="#tools"
+              href="/tools"
               className="text-sm font-medium hover:text-primary transition-colors hidden sm:inline"
             >
               Tools
             </Link>
             <Link
-              href="#features"
+              href="/features"
               className="text-sm font-medium hover:text-primary transition-colors hidden sm:inline"
             >
               Features
