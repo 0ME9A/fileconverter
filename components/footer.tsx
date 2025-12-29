@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import { Mail, Github, Twitter, Linkedin } from "lucide-react";
+import { footerLinks, social } from "@/app/_src/data/sitemap";
+import { companyInfo } from "@/app/_src/data/site-data";
+import { ThemeToggle } from "./theme-toggle";
 import Link from "next/link";
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
-
   return (
     <footer className="border-t bg-muted/30">
       <div className="max-w-6xl mx-auto px-4 py-12">
@@ -18,175 +18,59 @@ export function Footer() {
                 className="h-6"
               />
             </Link>
-            <p className="text-sm text-muted-foreground">
-              Free online file conversion tools. Fast, secure, and completely
-              private. All processing happens in your browser.
-            </p>
+            <p className="text-sm text-muted-foreground">{companyInfo.about}</p>
             <div className="flex gap-3">
-              <Link
-                href="https://github.com/0me9a"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="GitHub"
-              >
-                <Github className="w-5 h-5" />
-              </Link>
-              <Link
-                href="https://twitter.com/omegastrikes"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Twitter"
-              >
-                <Twitter className="w-5 h-5" />
-              </Link>
-              <Link
-                href="https://linkedin.com/in/baliram-singh"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="w-5 h-5" />
-              </Link>
+              {social.map((item) => (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={item.label}
+                >
+                  {item.icon && <item.icon size={20} />}
+                </Link>
+              ))}
             </div>
           </div>
 
-          {/* Tools */}
-          <div>
-            <h3 className="font-semibold mb-4">Conversion Tools</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link
-                  href="/webp-converter"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Image to WebP
-                </Link>
-              </li>
-              <li>
-                <span className="text-muted-foreground/50">
-                  Image to JPG (Coming Soon)
-                </span>
-              </li>
-              <li>
-                <span className="text-muted-foreground/50">
-                  Image to PNG (Coming Soon)
-                </span>
-              </li>
-              <li>
-                <span className="text-muted-foreground/50">
-                  Image Compression (Coming Soon)
-                </span>
-              </li>
-              <li>
-                <span className="text-muted-foreground/50">
-                  Batch Resize (Coming Soon)
-                </span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div>
-            <h3 className="font-semibold mb-4">Resources</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link
-                  href="/#features"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Features
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#tools"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  All Tools
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#about"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#blog"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#faq"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  FAQ
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Legal & Contact */}
-          <div>
-            <h3 className="font-semibold mb-4">Legal & Contact</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link
-                  href="/privacy"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/terms"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/cookies"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Cookie Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="mailto:heyome9a@gmail.com"
-                  className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
-                >
-                  <Mail className="w-4 h-4" />
-                  Contact Support
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {footerLinks.map((linkList) => (
+            <div key={linkList.id}>
+              <h3 className="font-semibold mb-4">{linkList.title}</h3>
+              <ul className="space-y-2 text-sm">
+                {linkList.links.map((link) => (
+                  <li key={link.id}>
+                    {link.disabled ? (
+                      <span className="text-muted-foreground/50">
+                        {link.label}
+                      </span>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
         {/* Bottom Bar */}
         <div className="border-t pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
             <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
-              <p>© {currentYear} FileConverter. All rights reserved.</p>
+              <p>{companyInfo.copyRights}</p>
               <p className="hidden md:block">•</p>
-              <p className="text-center">
-                Made with privacy and performance in mind
-              </p>
+              <p className="text-center">{companyInfo.slogan}</p>
             </div>
             <div className="flex items-center gap-4">
+              <ThemeToggle />
+              <span>•</span>
               <Link
                 href="/sitemap.xml"
                 className="hover:text-foreground transition-colors"
