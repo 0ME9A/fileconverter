@@ -12,71 +12,67 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ConversionOptions } from "@/app/webp-converter/page";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { TConversionOptions } from "./type";
 import { Settings2 } from "lucide-react";
 import { useState } from "react";
 
-interface AdvancedOptionsDialogProps {
-  image: { id: string; file: File; options: ConversionOptions };
+type Props = {
+  options: TConversionOptions;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (options: ConversionOptions) => void;
-}
+  onSave: (options: TConversionOptions) => void;
+  onReset: () => void;
+};
 
-export function AdvancedOptionsDialog({
-  image,
+export function MasterSettings({
+  options,
   open,
   onOpenChange,
   onSave,
-}: AdvancedOptionsDialogProps) {
-  const [options, setOptions] = useState<ConversionOptions>(image.options);
+  onReset,
+}: Props) {
+  const [masterOptions, setMasterOptions] =
+    useState<TConversionOptions>(options);
 
   const handleSave = () => {
-    onSave(options);
+    onSave(masterOptions);
     onOpenChange(false);
   };
 
   const handleReset = () => {
-    setOptions({
-      quality: 80,
-      resize: "keep",
-      backgroundColor: "#FFFFFF",
-      compression: "none",
-      autoOrient: true,
-      stripMetadata: true,
-    });
+    onReset();
+    onOpenChange(false);
   };
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return bytes + " B";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+  // Update local options when dialog opens with new values
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      setMasterOptions(options);
+    }
+    onOpenChange(open);
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <Settings2 className="w-5 h-5" />
-            <DialogTitle>Advanced Options</DialogTitle>
+            <DialogTitle>Master Settings</DialogTitle>
           </div>
+          <p className="text-sm text-muted-foreground">
+            These settings will apply to all images by default. Individual
+            images can override these settings.
+          </p>
         </DialogHeader>
 
         <div className="space-y-6">
-          <div className="text-sm text-muted-foreground">
-            File name:{" "}
-            <span className="font-medium text-foreground">
-              {image.file.name}
-            </span>{" "}
-            ({formatFileSize(image.file.size)})
-          </div>
-
           {/* Image Options Section */}
           <div className="space-y-4">
             <div className="bg-muted/50 rounded-lg p-3">
@@ -88,13 +84,13 @@ export function AdvancedOptionsDialog({
               <div className="flex items-center justify-between">
                 <Label>Quality</Label>
                 <span className="text-sm text-muted-foreground">
-                  {options.quality}%
+                  {masterOptions.quality}%
                 </span>
               </div>
               <Slider
-                value={[options.quality]}
+                value={[masterOptions.quality]}
                 onValueChange={([value]) =>
-                  setOptions((prev) => ({ ...prev, quality: value }))
+                  setMasterOptions((prev) => ({ ...prev, quality: value }))
                 }
                 min={1}
                 max={100}
@@ -110,9 +106,9 @@ export function AdvancedOptionsDialog({
             <div className="space-y-2">
               <Label>Resize Output Image</Label>
               <Select
-                value={options.resize}
+                value={masterOptions.resize}
                 onValueChange={(value: "keep" | "custom") =>
-                  setOptions((prev) => ({ ...prev, resize: value }))
+                  setMasterOptions((prev) => ({ ...prev, resize: value }))
                 }
               >
                 <SelectTrigger>
@@ -123,16 +119,16 @@ export function AdvancedOptionsDialog({
                   <SelectItem value="custom">Custom size</SelectItem>
                 </SelectContent>
               </Select>
-              {options.resize === "custom" && (
+              {masterOptions.resize === "custom" && (
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <Label className="text-xs">Width (px)</Label>
                     <Input
                       type="number"
                       placeholder="Width"
-                      value={options.width || ""}
+                      value={masterOptions.width || ""}
                       onChange={(e) =>
-                        setOptions((prev) => ({
+                        setMasterOptions((prev) => ({
                           ...prev,
                           width: Number.parseInt(e.target.value) || undefined,
                         }))
@@ -144,9 +140,9 @@ export function AdvancedOptionsDialog({
                     <Input
                       type="number"
                       placeholder="Height"
-                      value={options.height || ""}
+                      value={masterOptions.height || ""}
                       onChange={(e) =>
-                        setOptions((prev) => ({
+                        setMasterOptions((prev) => ({
                           ...prev,
                           height: Number.parseInt(e.target.value) || undefined,
                         }))
@@ -166,9 +162,9 @@ export function AdvancedOptionsDialog({
               <div className="flex gap-2">
                 <Input
                   type="text"
-                  value={options.backgroundColor}
+                  value={masterOptions.backgroundColor}
                   onChange={(e) =>
-                    setOptions((prev) => ({
+                    setMasterOptions((prev) => ({
                       ...prev,
                       backgroundColor: e.target.value,
                     }))
@@ -178,12 +174,12 @@ export function AdvancedOptionsDialog({
                 <Input
                   type="color"
                   value={
-                    options.backgroundColor === "transparent"
+                    masterOptions.backgroundColor === "transparent"
                       ? "#FFFFFF"
-                      : options.backgroundColor
+                      : masterOptions.backgroundColor
                   }
                   onChange={(e) =>
-                    setOptions((prev) => ({
+                    setMasterOptions((prev) => ({
                       ...prev,
                       backgroundColor: e.target.value,
                     }))
@@ -202,9 +198,9 @@ export function AdvancedOptionsDialog({
             <div className="space-y-2">
               <Label>Compress Output Image</Label>
               <Select
-                value={options.compression}
+                value={masterOptions.compression}
                 onValueChange={(value: "none" | "low" | "medium" | "high") =>
-                  setOptions((prev) => ({ ...prev, compression: value }))
+                  setMasterOptions((prev) => ({ ...prev, compression: value }))
                 }
               >
                 <SelectTrigger>
@@ -226,15 +222,18 @@ export function AdvancedOptionsDialog({
             {/* Auto Orient */}
             <div className="flex items-start space-x-2">
               <Checkbox
-                id="auto-orient"
-                checked={options.autoOrient}
+                id="universal-auto-orient"
+                checked={masterOptions.autoOrient}
                 onCheckedChange={(checked) =>
-                  setOptions((prev) => ({ ...prev, autoOrient: !!checked }))
+                  setMasterOptions((prev) => ({
+                    ...prev,
+                    autoOrient: !!checked,
+                  }))
                 }
               />
               <div className="space-y-1">
                 <label
-                  htmlFor="auto-orient"
+                  htmlFor="universal-auto-orient"
                   className="text-sm font-medium cursor-pointer"
                 >
                   Auto Orient
@@ -249,22 +248,24 @@ export function AdvancedOptionsDialog({
             {/* Strip Metadata */}
             <div className="flex items-start space-x-2">
               <Checkbox
-                id="strip-metadata"
-                checked={options.stripMetadata}
+                id="universal-strip-metadata"
+                checked={masterOptions.stripMetadata}
                 onCheckedChange={(checked) =>
-                  setOptions((prev) => ({ ...prev, stripMetadata: !!checked }))
+                  setMasterOptions((prev) => ({
+                    ...prev,
+                    stripMetadata: !!checked,
+                  }))
                 }
               />
               <div className="space-y-1">
                 <label
-                  htmlFor="strip-metadata"
+                  htmlFor="universal-strip-metadata"
                   className="text-sm font-medium cursor-pointer"
                 >
                   Strip Metadata
                 </label>
                 <p className="text-xs text-muted-foreground">
-                  Strip the image of any profiles, EXIF, and comments to reduce
-                  size
+                  Remove EXIF and metadata to reduce file size
                 </p>
               </div>
             </div>
@@ -272,10 +273,15 @@ export function AdvancedOptionsDialog({
 
           {/* Action Buttons */}
           <div className="flex items-center justify-between pt-4 border-t">
-            <Button variant="outline" onClick={handleReset}>
-              Reset all options
+            <Button variant="destructive" onClick={handleReset}>
+              Reset All Settings
             </Button>
-            <Button onClick={handleSave}>Apply Settings</Button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => onOpenChange(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSave}>Apply to All Images</Button>
+            </div>
           </div>
         </div>
       </DialogContent>

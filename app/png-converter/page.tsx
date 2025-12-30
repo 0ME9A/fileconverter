@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
-import { TConversionOptions, TImageFile } from "./type";
+import type React from "react";
+import { TImageFile, TPngConversionOptions } from "./type";
 import { AdvancedSettings } from "./advanced-settings";
 import { MasterSettings } from "./master-settings";
 import { formatFileSize } from "../_src/utils";
@@ -10,22 +10,19 @@ import ImageActionArea from "@/components/image-action-area";
 import ImageListCard from "@/components/ui/image-list-card";
 import PageHeader from "@/components/ui/page-header";
 import UploadArea from "@/components/upload-area";
-import React from "react";
 
-const defaultOptions: TConversionOptions = {
-  quality: 80,
+const defaultOptions: TPngConversionOptions = {
+  compressionLevel: 6,
   resize: "keep",
-  backgroundColor: "#FFFFFF",
-  compression: "none",
-  autoOrient: true,
+  preserveTransparency: true,
   stripMetadata: true,
 };
 
-export default function ImageConverter() {
+export default function PngConverter() {
   const [images, setImages] = useState<TImageFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [masterSettings, setMasterSettings] = useState<TConversionOptions>({
+  const [masterSettings, setMasterSettings] = useState<TPngConversionOptions>({
     ...defaultOptions,
   });
   const [showMasterSettings, setShowMasterSettings] = useState(false);
@@ -77,26 +74,14 @@ export default function ImageConverter() {
         canvas.width = width;
         canvas.height = height;
 
-        if (imageFile.options.backgroundColor !== "transparent") {
-          ctx.fillStyle = imageFile.options.backgroundColor;
+        if (!imageFile.options.preserveTransparency) {
+          ctx.fillStyle = "#FFFFFF";
           ctx.fillRect(0, 0, width, height);
         }
 
         ctx.drawImage(img, 0, 0, width, height);
 
-        let quality = imageFile.options.quality / 100;
-        switch (imageFile.options.compression) {
-          case "low":
-            quality *= 0.9;
-            break;
-          case "medium":
-            quality *= 0.7;
-            break;
-          case "high":
-            quality *= 0.5;
-            break;
-        }
-
+        // PNG compression is lossless, quality is always 1.0
         canvas.toBlob(
           (blob) => {
             if (blob) {
@@ -105,8 +90,8 @@ export default function ImageConverter() {
               reject(new Error("Failed to convert image"));
             }
           },
-          "image/webp",
-          quality
+          "image/png",
+          1.0
         );
       };
 
@@ -146,14 +131,12 @@ export default function ImageConverter() {
   };
 
   const downloadImage = (image: TImageFile) => {
-    if (!image.outputBlob) {
-      return;
-    }
+    if (!image.outputBlob) return;
 
     const url = URL.createObjectURL(image.outputBlob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = image.file.name.replace(/\.[^/.]+$/, "") + ".webp";
+    a.download = image.file.name.replace(/\.[^/.]+$/, "") + ".png";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -188,7 +171,7 @@ export default function ImageConverter() {
     );
   };
 
-  const handleMasterSettingsSave = (options: TConversionOptions) => {
+  const handleMasterSettingsSave = (options: TPngConversionOptions) => {
     setMasterSettings(options);
     setImages((prev) =>
       prev.map((img) =>
@@ -200,12 +183,12 @@ export default function ImageConverter() {
   };
 
   return (
-    <main className="min-h-screen bg-background p-4 md:p-8">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <main className="min-h-screen bg-background">
+      <div className="max-w-5xl mx-auto p-4 md:p-8 space-y-6">
         <PageHeader
-          title={"Image to WebP Converter"}
+          title={"Image to PNG Converter"}
           desc={
-            "Convert your images to WebP format with advanced options. All processing happens locally in your browser."
+            "Convert your images to PNG format with transparency support. All processing happens locally in your browser."
           }
         />
 
@@ -218,14 +201,13 @@ export default function ImageConverter() {
 
         {images.length > 0 && (
           <div className="space-y-4">
-            <ImageActionArea<TImageFile>
+            <ImageActionArea
               images={images}
               setShowMasterSettings={setShowMasterSettings}
               handleConvertAll={handleConvertAll}
               downloadAll={downloadAll}
               clearAll={clearAll}
             />
-
             <div className="space-y-2">
               {images.map((image) => (
                 <ImageListCard<TImageFile>
@@ -233,13 +215,14 @@ export default function ImageConverter() {
                   image={image}
                   formatFileSize={formatFileSize}
                   setSelectedImage={setSelectedImage}
-                  downloadImage={downloadImage}
+                  downloadImage={downloadAll}
                   removeImage={removeImage}
                 />
               ))}
             </div>
           </div>
         )}
+
         {images.length === 0 && <EmptyStateCard />}
       </div>
 

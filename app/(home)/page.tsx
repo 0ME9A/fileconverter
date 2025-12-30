@@ -1,22 +1,14 @@
 "use client";
-import { useRef } from "react";
-import {
-  ArrowRight,
-  Zap,
-  Shield,
-  FileImage,
-  Sparkles,
-  CheckCircle2,
-} from "lucide-react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
 import { useGSAP } from "@gsap/react";
+import { useRef } from "react";
 import Link from "next/link";
-import gsap from "gsap";
 import Tools from "./tools";
 import Trust from "./trust";
 import Hero from "./hero";
+import gsap from "gsap";
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.registerPlugin(useGSAP);
