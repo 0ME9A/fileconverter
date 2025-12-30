@@ -13,10 +13,16 @@ export default function Navbar() {
           </Link>
           <div className="flex items-center gap-6">
             <Link
+              href="/about"
+              className="text-sm font-medium hover:text-primary transition-colors hidden sm:inline"
+            >
+              About
+            </Link>
+            <Link
               href="/tools"
               className="text-sm font-medium hover:text-primary transition-colors hidden sm:inline"
             >
-              Tools
+              tools
             </Link>
             <Link
               href="/features"
@@ -27,8 +33,11 @@ export default function Navbar() {
             <div className="hidden sm:block">
               <ThemeToggle />
             </div>
-            <Button asChild size="sm">
-              <Link href="/webp-converter">Start Converting</Link>
+            <Button asChild size="sm" className="hidden sm:flex">
+              <Link href="/contact">Contact us</Link>
+            </Button>
+            <Button asChild size="sm" className="sm:hidden">
+              <Link href="/tools">View All Tools</Link>
             </Button>
           </div>
         </div>

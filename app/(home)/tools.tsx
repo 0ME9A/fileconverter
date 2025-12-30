@@ -1,9 +1,11 @@
 "use client";
-import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { TOOLS } from "../_src/data/tools";
+import { ArrowRight } from "lucide-react";
 import { RefObject } from "react";
-import Link from "next/link";
 import SectionHeader from "@/components/ui/section-header";
+import ToolCard from "@/components/ui/tool-card";
+import Link from "next/link";
 
 type TProps = {
   toolsRef: RefObject<HTMLDivElement | null>;
@@ -18,52 +20,26 @@ export default function Tools({ toolsRef }: TProps) {
           desc={"More converters coming soon"}
         />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {TOOLS.map((tool) => {
-            const Icon = tool.icon;
-            const isAvailable = tool.status === "available";
-
-            const content = (
-              <Card
-                className={`p-6 h-full transition-shadow tool-card ${
-                  isAvailable
-                    ? "hover:shadow-lg cursor-pointer"
-                    : "opacity-60 cursor-not-allowed"
-                }`}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div
-                    className={`w-12 h-12 rounded-lg bg-linear-to-br ${tool.gradient} flex items-center justify-center`}
-                  >
-                    <Icon className="w-6 h-6 text-white" />
-                  </div>
-
-                  <span
-                    className={`text-xs px-2 py-1 rounded-full ${
-                      isAvailable
-                        ? "bg-green-100 text-green-700"
-                        : "bg-gray-100 text-gray-700"
-                    }`}
-                  >
-                    {isAvailable ? "Available" : "Coming Soon"}
-                  </span>
-                </div>
-
-                <h3 className="text-lg font-semibold mb-2">{tool.title}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {tool.description}
-                </p>
-              </Card>
-            );
-
-            return isAvailable && tool.href ? (
-              <Link key={tool.id} href={tool.href}>
-                {content}
-              </Link>
-            ) : (
-              <div key={tool.id}>{content}</div>
-            );
-          })}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {TOOLS.map((tool, index) => (
+            <div key={index}>
+              {tool.status === "available" && tool.href ? (
+                <Link href={tool.href}>
+                  <ToolCard data={tool} />
+                </Link>
+              ) : (
+                <ToolCard data={tool} />
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="text-center mt-12">
+          <Button size="lg" asChild className="gap-2">
+            <Link href="/tools">
+              View All Tools
+              <ArrowRight className="size-4" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

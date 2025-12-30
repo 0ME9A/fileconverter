@@ -78,12 +78,13 @@ export type TCompanyInfo = {
 };
 
 // tools
-export type TToolHighlight = {
+export type TToolCard = {
   id: string;
   title: string;
   description: string;
   href?: string;
   status: "available" | "coming-soon";
+  features: string[];
   gradient: string;
   icon: LucideIcon;
 };
@@ -97,10 +98,19 @@ export type TTrustItem = {
 };
 
 // features
-
 export type TFeature = {
   id: string;
   title: string;
   description: string;
   icon: LucideIcon;
+};
+
+// image
+export type TBaseImage = {
+  id: string;
+  preview: string;
+  file: File;
+  status: "pending" | "processing" | "completed";
+  outputSize?: number;
+  useCustomSettings?: boolean;
 };

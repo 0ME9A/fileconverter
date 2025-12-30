@@ -7,10 +7,6 @@ export const metadata: Metadata = {
     "Convert any image format to WebP with advanced options. Batch processing, quality control, compression settings, and more. All processing happens locally in your browser - no uploads required.",
 };
 
-export default function WebPConverterLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

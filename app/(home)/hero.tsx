@@ -35,7 +35,7 @@ export default function Hero({ heroRef }: TProps) {
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="#tools">Browse Tools</Link>
+              <Link href="/tools">Browse Tools</Link>
             </Button>
           </div>
         </div>

@@ -12,69 +12,70 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ConversionOptions } from "@/app/webp-converter/page";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { formatFileSize } from "../_src/utils";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { TConversionOptions } from "./type";
 import { Settings2 } from "lucide-react";
 import { useState } from "react";
 
-interface UniversalSettingsDialogProps {
-  options: ConversionOptions;
+type TProps = {
+  image: { id: string; file: File; options: TConversionOptions };
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (options: ConversionOptions) => void;
-  onReset: () => void;
-}
+  onSave: (options: TConversionOptions) => void;
+};
 
-export function UniversalSettingsDialog({
-  options,
+export function AdvancedSettings({
+  image,
   open,
   onOpenChange,
   onSave,
-  onReset,
-}: UniversalSettingsDialogProps) {
-  const [localOptions, setLocalOptions] = useState<ConversionOptions>(options);
+}: TProps) {
+  const [options, setOptions] = useState<TConversionOptions>(image.options);
 
   const handleSave = () => {
-    onSave(localOptions);
+    onSave(options);
     onOpenChange(false);
   };
 
   const handleReset = () => {
-    onReset();
-    onOpenChange(false);
-  };
-
-  // Update local options when dialog opens with new values
-  const handleOpenChange = (open: boolean) => {
-    if (open) {
-      setLocalOptions(options);
-    }
-    onOpenChange(open);
+    setOptions({
+      quality: 80,
+      resize: "keep",
+      backgroundColor: "#FFFFFF",
+      compression: "none",
+      autoOrient: true,
+      stripMetadata: true,
+    });
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <Settings2 className="w-5 h-5" />
-            <DialogTitle>Universal Settings</DialogTitle>
+            <DialogTitle>Advanced Options</DialogTitle>
           </div>
-          <p className="text-sm text-muted-foreground">
-            These settings will apply to all images by default. Individual
-            images can override these settings.
-          </p>
         </DialogHeader>
 
         <div className="space-y-6">
+          <div className="text-sm text-muted-foreground">
+            File name:{" "}
+            <span className="font-medium text-foreground">
+              {image.file.name}
+            </span>{" "}
+            ({formatFileSize(image.file.size)})
+          </div>
+
           {/* Image Options Section */}
           <div className="space-y-4">
             <div className="bg-muted/50 rounded-lg p-3">
-              <h3 className="font-semibold mb-3">Default Image Options</h3>
+              <h3 className="font-semibold mb-3">Image Options</h3>
             </div>
 
             {/* Quality Slider */}
@@ -82,13 +83,13 @@ export function UniversalSettingsDialog({
               <div className="flex items-center justify-between">
                 <Label>Quality</Label>
                 <span className="text-sm text-muted-foreground">
-                  {localOptions.quality}%
+                  {options.quality}%
                 </span>
               </div>
               <Slider
-                value={[localOptions.quality]}
+                value={[options.quality]}
                 onValueChange={([value]) =>
-                  setLocalOptions((prev) => ({ ...prev, quality: value }))
+                  setOptions((prev) => ({ ...prev, quality: value }))
                 }
                 min={1}
                 max={100}
@@ -104,9 +105,9 @@ export function UniversalSettingsDialog({
             <div className="space-y-2">
               <Label>Resize Output Image</Label>
               <Select
-                value={localOptions.resize}
+                value={options.resize}
                 onValueChange={(value: "keep" | "custom") =>
-                  setLocalOptions((prev) => ({ ...prev, resize: value }))
+                  setOptions((prev) => ({ ...prev, resize: value }))
                 }
               >
                 <SelectTrigger>
@@ -117,16 +118,16 @@ export function UniversalSettingsDialog({
                   <SelectItem value="custom">Custom size</SelectItem>
                 </SelectContent>
               </Select>
-              {localOptions.resize === "custom" && (
+              {options.resize === "custom" && (
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <Label className="text-xs">Width (px)</Label>
                     <Input
                       type="number"
                       placeholder="Width"
-                      value={localOptions.width || ""}
+                      value={options.width || ""}
                       onChange={(e) =>
-                        setLocalOptions((prev) => ({
+                        setOptions((prev) => ({
                           ...prev,
                           width: Number.parseInt(e.target.value) || undefined,
                         }))
@@ -138,9 +139,9 @@ export function UniversalSettingsDialog({
                     <Input
                       type="number"
                       placeholder="Height"
-                      value={localOptions.height || ""}
+                      value={options.height || ""}
                       onChange={(e) =>
-                        setLocalOptions((prev) => ({
+                        setOptions((prev) => ({
                           ...prev,
                           height: Number.parseInt(e.target.value) || undefined,
                         }))
@@ -160,9 +161,9 @@ export function UniversalSettingsDialog({
               <div className="flex gap-2">
                 <Input
                   type="text"
-                  value={localOptions.backgroundColor}
+                  value={options.backgroundColor}
                   onChange={(e) =>
-                    setLocalOptions((prev) => ({
+                    setOptions((prev) => ({
                       ...prev,
                       backgroundColor: e.target.value,
                     }))
@@ -172,12 +173,12 @@ export function UniversalSettingsDialog({
                 <Input
                   type="color"
                   value={
-                    localOptions.backgroundColor === "transparent"
+                    options.backgroundColor === "transparent"
                       ? "#FFFFFF"
-                      : localOptions.backgroundColor
+                      : options.backgroundColor
                   }
                   onChange={(e) =>
-                    setLocalOptions((prev) => ({
+                    setOptions((prev) => ({
                       ...prev,
                       backgroundColor: e.target.value,
                     }))
@@ -196,9 +197,9 @@ export function UniversalSettingsDialog({
             <div className="space-y-2">
               <Label>Compress Output Image</Label>
               <Select
-                value={localOptions.compression}
+                value={options.compression}
                 onValueChange={(value: "none" | "low" | "medium" | "high") =>
-                  setLocalOptions((prev) => ({ ...prev, compression: value }))
+                  setOptions((prev) => ({ ...prev, compression: value }))
                 }
               >
                 <SelectTrigger>
@@ -220,18 +221,15 @@ export function UniversalSettingsDialog({
             {/* Auto Orient */}
             <div className="flex items-start space-x-2">
               <Checkbox
-                id="universal-auto-orient"
-                checked={localOptions.autoOrient}
+                id="auto-orient"
+                checked={options.autoOrient}
                 onCheckedChange={(checked) =>
-                  setLocalOptions((prev) => ({
-                    ...prev,
-                    autoOrient: !!checked,
-                  }))
+                  setOptions((prev) => ({ ...prev, autoOrient: !!checked }))
                 }
               />
               <div className="space-y-1">
                 <label
-                  htmlFor="universal-auto-orient"
+                  htmlFor="auto-orient"
                   className="text-sm font-medium cursor-pointer"
                 >
                   Auto Orient
@@ -246,25 +244,21 @@ export function UniversalSettingsDialog({
             {/* Strip Metadata */}
             <div className="flex items-start space-x-2">
               <Checkbox
-                id="universal-strip-metadata"
-                checked={localOptions.stripMetadata}
+                id="strip-metadata"
+                checked={options.stripMetadata}
                 onCheckedChange={(checked) =>
-                  setLocalOptions((prev) => ({
-                    ...prev,
-                    stripMetadata: !!checked,
-                  }))
+                  setOptions((prev) => ({ ...prev, stripMetadata: !!checked }))
                 }
               />
               <div className="space-y-1">
                 <label
-                  htmlFor="universal-strip-metadata"
+                  htmlFor="strip-metadata"
                   className="text-sm font-medium cursor-pointer"
                 >
                   Strip Metadata
                 </label>
                 <p className="text-xs text-muted-foreground">
-                  Strip the image of any profiles, EXIF, and comments to reduce
-                  size
+                  Remove EXIF and metadata to reduce file size
                 </p>
               </div>
             </div>
@@ -272,15 +266,10 @@ export function UniversalSettingsDialog({
 
           {/* Action Buttons */}
           <div className="flex items-center justify-between pt-4 border-t">
-            <Button variant="destructive" onClick={handleReset}>
-              Reset All Settings
+            <Button variant="outline" onClick={handleReset}>
+              Reset all options
             </Button>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => onOpenChange(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleSave}>Apply to All Images</Button>
-            </div>
+            <Button onClick={handleSave}>Apply Settings</Button>
           </div>
         </div>
       </DialogContent>

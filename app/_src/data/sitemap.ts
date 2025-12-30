@@ -50,21 +50,18 @@ export const footerLinks: TFooterLinks = [
       },
       {
         id: "c2",
-        label: "Image to JPG (Coming Soon)",
-        href: "#",
-        disabled: true,
+        label: "Image to JPG",
+        href: "/jpg-converter",
       },
       {
         id: "c3",
-        label: "Image to PNG (Coming Soon)",
-        href: "#",
-        disabled: true,
+        label: "Image to PNG",
+        href: "/png-converter",
       },
       {
         id: "c4",
-        label: "Image Compression (Coming Soon)",
-        href: "#",
-        disabled: true,
+        label: "Image to ICO",
+        href: "/ico-converter",
       },
       {
         id: "c5",

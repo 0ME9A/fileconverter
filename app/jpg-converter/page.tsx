@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+import type React from "react";
 import { TConversionOptions, TImageFile } from "./type";
 import { AdvancedSettings } from "./advanced-settings";
-import { MasterSettings } from "./master-settings";
 import { formatFileSize } from "../_src/utils";
 import { useState } from "react";
 import EmptyStateCard from "@/components/ui/empty-state-card";
@@ -10,18 +10,16 @@ import ImageActionArea from "@/components/image-action-area";
 import ImageListCard from "@/components/ui/image-list-card";
 import PageHeader from "@/components/ui/page-header";
 import UploadArea from "@/components/upload-area";
-import React from "react";
+import MasterSettings from "./master-settings";
 
 const defaultOptions: TConversionOptions = {
-  quality: 80,
+  quality: 85,
   resize: "keep",
   backgroundColor: "#FFFFFF",
   compression: "none",
-  autoOrient: true,
-  stripMetadata: true,
 };
 
-export default function ImageConverter() {
+export default function JpgConverter() {
   const [images, setImages] = useState<TImageFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -77,10 +75,9 @@ export default function ImageConverter() {
         canvas.width = width;
         canvas.height = height;
 
-        if (imageFile.options.backgroundColor !== "transparent") {
-          ctx.fillStyle = imageFile.options.backgroundColor;
-          ctx.fillRect(0, 0, width, height);
-        }
+        // JPG doesn't support transparency, fill with background color
+        ctx.fillStyle = imageFile.options.backgroundColor;
+        ctx.fillRect(0, 0, width, height);
 
         ctx.drawImage(img, 0, 0, width, height);
 
@@ -105,7 +102,7 @@ export default function ImageConverter() {
               reject(new Error("Failed to convert image"));
             }
           },
-          "image/webp",
+          "image/jpeg",
           quality
         );
       };
@@ -146,14 +143,12 @@ export default function ImageConverter() {
   };
 
   const downloadImage = (image: TImageFile) => {
-    if (!image.outputBlob) {
-      return;
-    }
+    if (!image.outputBlob) return;
 
     const url = URL.createObjectURL(image.outputBlob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = image.file.name.replace(/\.[^/.]+$/, "") + ".webp";
+    a.download = image.file.name.replace(/\.[^/.]+$/, "") + ".jpg";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -200,12 +195,12 @@ export default function ImageConverter() {
   };
 
   return (
-    <main className="min-h-screen bg-background p-4 md:p-8">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <main className="min-h-screen bg-background">
+      <div className="max-w-5xl mx-auto p-4 md:p-8 space-y-6">
         <PageHeader
-          title={"Image to WebP Converter"}
+          title={"Image to JPG Converter"}
           desc={
-            "Convert your images to WebP format with advanced options. All processing happens locally in your browser."
+            "Convert your images to JPG format with quality control. All processing happens locally in your browser."
           }
         />
 

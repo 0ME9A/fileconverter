@@ -1,8 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
-import { TConversionOptions, TImageFile } from "./type";
+import type React from "react";
+import { TIcoConversionOptions, TImageFile } from "./type";
 import { AdvancedSettings } from "./advanced-settings";
-import { MasterSettings } from "./master-settings";
 import { formatFileSize } from "../_src/utils";
 import { useState } from "react";
 import EmptyStateCard from "@/components/ui/empty-state-card";
@@ -10,22 +9,20 @@ import ImageActionArea from "@/components/image-action-area";
 import ImageListCard from "@/components/ui/image-list-card";
 import PageHeader from "@/components/ui/page-header";
 import UploadArea from "@/components/upload-area";
-import React from "react";
+import MasterSettings from "./master-settings";
 
-const defaultOptions: TConversionOptions = {
-  quality: 80,
-  resize: "keep",
-  backgroundColor: "#FFFFFF",
-  compression: "none",
-  autoOrient: true,
-  stripMetadata: true,
+const defaultOptions: TIcoConversionOptions = {
+  sizes: [16, 32, 48],
+  generateMultipleSizes: true,
 };
 
-export default function ImageConverter() {
+const availableSizes = [16, 24, 32, 48, 64, 128, 256];
+
+export default function IcoConverter() {
   const [images, setImages] = useState<TImageFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [masterSettings, setMasterSettings] = useState<TConversionOptions>({
+  const [masterSettings, setMasterSettings] = useState<TIcoConversionOptions>({
     ...defaultOptions,
   });
   const [showMasterSettings, setShowMasterSettings] = useState(false);
@@ -49,70 +46,50 @@ export default function ImageConverter() {
     setImages((prev) => [...prev, ...newImages]);
   };
 
-  const convertImage = async (imageFile: TImageFile): Promise<Blob> => {
-    return new Promise((resolve, reject) => {
-      const img = document.createElement("img");
-      img.crossOrigin = "anonymous";
+  const convertImage = async (
+    imageFile: TImageFile
+  ): Promise<Map<number, Blob>> => {
+    const outputBlobs = new Map<number, Blob>();
 
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        if (!ctx) {
-          reject(new Error("Failed to get canvas context"));
-          return;
-        }
+    for (const size of imageFile.options.sizes) {
+      const blob = await new Promise<Blob>((resolve, reject) => {
+        const img = document.createElement("img");
+        img.crossOrigin = "anonymous";
 
-        let width = img.width;
-        let height = img.height;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            reject(new Error("Failed to get canvas context"));
+            return;
+          }
 
-        if (
-          imageFile.options.resize === "custom" &&
-          imageFile.options.width &&
-          imageFile.options.height
-        ) {
-          width = imageFile.options.width;
-          height = imageFile.options.height;
-        }
+          canvas.width = size;
+          canvas.height = size;
 
-        canvas.width = width;
-        canvas.height = height;
+          ctx.drawImage(img, 0, 0, size, size);
 
-        if (imageFile.options.backgroundColor !== "transparent") {
-          ctx.fillStyle = imageFile.options.backgroundColor;
-          ctx.fillRect(0, 0, width, height);
-        }
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                resolve(blob);
+              } else {
+                reject(new Error("Failed to convert image"));
+              }
+            },
+            "image/png",
+            1.0
+          );
+        };
 
-        ctx.drawImage(img, 0, 0, width, height);
+        img.onerror = () => reject(new Error("Failed to load image"));
+        img.src = imageFile.preview;
+      });
 
-        let quality = imageFile.options.quality / 100;
-        switch (imageFile.options.compression) {
-          case "low":
-            quality *= 0.9;
-            break;
-          case "medium":
-            quality *= 0.7;
-            break;
-          case "high":
-            quality *= 0.5;
-            break;
-        }
+      outputBlobs.set(size, blob);
+    }
 
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              resolve(blob);
-            } else {
-              reject(new Error("Failed to convert image"));
-            }
-          },
-          "image/webp",
-          quality
-        );
-      };
-
-      img.onerror = () => reject(new Error("Failed to load image"));
-      img.src = imageFile.preview;
-    });
+    return outputBlobs;
   };
 
   const handleConvertAll = async () => {
@@ -125,16 +102,11 @@ export default function ImageConverter() {
         );
 
         try {
-          const blob = await convertImage(image);
+          const blobs = await convertImage(image);
           setImages((prev) =>
             prev.map((img) =>
               img.id === image.id
-                ? {
-                    ...img,
-                    status: "completed",
-                    outputBlob: blob,
-                    outputSize: blob.size,
-                  }
+                ? { ...img, status: "completed", outputBlobs: blobs }
                 : img
             )
           );
@@ -145,25 +117,44 @@ export default function ImageConverter() {
     }
   };
 
-  const downloadImage = (image: TImageFile) => {
-    if (!image.outputBlob) {
-      return;
-    }
+  const downloadImage = (image: TImageFile, size?: number) => {
+    if (!image.outputBlobs) return;
 
-    const url = URL.createObjectURL(image.outputBlob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = image.file.name.replace(/\.[^/.]+$/, "") + ".webp";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    if (size) {
+      const blob = image.outputBlobs.get(size);
+      if (!blob) return;
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download =
+        image.file.name.replace(/\.[^/.]+$/, "") + `_${size}x${size}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } else {
+      // Download all sizes
+      image.outputBlobs.forEach((blob, size) => {
+        setTimeout(() => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download =
+            image.file.name.replace(/\.[^/.]+$/, "") + `_${size}x${size}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, size * 10);
+      });
+    }
   };
 
   const downloadAll = () => {
     const completedImages = images.filter((img) => img.status === "completed");
     completedImages.forEach((image, index) => {
-      setTimeout(() => downloadImage(image), index * 100);
+      setTimeout(() => downloadImage(image), index * 500);
     });
   };
 
@@ -188,7 +179,7 @@ export default function ImageConverter() {
     );
   };
 
-  const handleMasterSettingsSave = (options: TConversionOptions) => {
+  const handleMasterSettingsSave = (options: TIcoConversionOptions) => {
     setMasterSettings(options);
     setImages((prev) =>
       prev.map((img) =>
@@ -200,12 +191,12 @@ export default function ImageConverter() {
   };
 
   return (
-    <main className="min-h-screen bg-background p-4 md:p-8">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <main className="min-h-screen bg-background">
+      <div className="max-w-5xl mx-auto p-4 md:p-8 space-y-6">
         <PageHeader
-          title={"Image to WebP Converter"}
+          title={"Image to ICO Converter"}
           desc={
-            "Convert your images to WebP format with advanced options. All processing happens locally in your browser."
+            "Convert your images to ICO format with multiple sizes. Perfect for favicons and app icons."
           }
         />
 
@@ -243,11 +234,13 @@ export default function ImageConverter() {
         {images.length === 0 && <EmptyStateCard />}
       </div>
 
+      {/* Advanced Options Dialog */}
       {selectedImage && (
         <AdvancedSettings
           image={images.find((img) => img.id === selectedImage)!}
           open={!!selectedImage}
           onOpenChange={(open) => !open && setSelectedImage(null)}
+          sizes={availableSizes}
           onSave={(options) => {
             setImages((prev) =>
               prev.map((img) =>
@@ -266,12 +259,14 @@ export default function ImageConverter() {
         />
       )}
 
+      {/* Universal Settings Dialog */}
       <MasterSettings
         options={masterSettings}
         open={showMasterSettings}
         onOpenChange={setShowMasterSettings}
         onSave={handleMasterSettingsSave}
         onReset={resetAllSettings}
+        sizes={availableSizes}
       />
     </main>
   );
