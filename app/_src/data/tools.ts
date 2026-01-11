@@ -36,7 +36,18 @@ export const TOOLS: TToolCard[] = [
     icon: FileImage,
   },
   {
-    id: "compress",
+    id: "multi-png",
+    title: "Multi-Size PNG Exporter",
+    description:
+      "Export single images into multiple PNG sizes simultaneously. Perfect for app icons.",
+    features: ["Custom sizes", "Batch export", "Preset support"],
+    href: "/multi-size-png-exporter",
+    status: "available",
+    gradient: "from-indigo-500 to-indigo-600",
+    icon: FileImage,
+  },
+  {
+    id: "ico",
     title: "Image to ICO Converter",
     description: "Convert images to ICO format for favicons and app icons",
     href: "/ico-converter",
@@ -57,7 +68,7 @@ export const TOOLS: TToolCard[] = [
   {
     id: "format",
     title: "Format Converter",
-    description: "Universal image format converter supporting 10+ formats",
+    description: "Master image format converter supporting 10+ formats",
     features: ["Multiple formats", "High quality"],
     status: "coming-soon",
     gradient: "from-teal-500 to-teal-600",

@@ -102,7 +102,7 @@ export default function CookiesPolicyPage() {
             <div className="prose prose-gray dark:prose-invert max-w-none">
               <p>In addition to cookies, we use browser local storage for:</p>
               <ul>
-                <li>Saving your universal conversion settings preferences</li>
+                <li>Saving your Master conversion settings preferences</li>
                 <li>
                   Caching conversion history for your convenience (stored only
                   on your device)

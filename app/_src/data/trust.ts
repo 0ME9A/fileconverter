@@ -13,7 +13,7 @@ export const TRUST_ITEMS: TTrustItem[] = [
     id: "batch",
     title: "Batch Processing",
     description:
-      "Convert multiple files simultaneously with universal or individual settings.",
+      "Convert multiple files simultaneously with Master or individual settings.",
     icon: CheckCircle2,
   },
   {
