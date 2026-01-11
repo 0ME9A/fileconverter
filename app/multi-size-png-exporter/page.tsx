@@ -1,13 +1,13 @@
 "use client";
 
-import { DropZone } from "../multi-size-png-exporter/components/DropZone";
-import { useIcoProcessor } from "./hooks/use-ico-processor";
+import { useImageProcessor } from "./hooks/use-image-processor";
+import { DEFAULT_OPTIONS, PngConversionOptions } from "./type";
 import { Settings2, Download, Trash2 } from "lucide-react";
-import { DEFAULT_ICO_OPTIONS, IcoOptions } from "./types";
 import { SettingsForm } from "./components/SettingsForm";
 import { ImageCard } from "./components/ImageCard";
+import { DropZone } from "./components/DropZone";
 import { Button } from "@/components/ui/button";
-import { downloadIco } from "./utils";
+import { downloadImageBlobs } from "./utils";
 import { useState } from "react";
 import {
   Dialog,
@@ -18,7 +18,7 @@ import {
 import EmptyStateCard from "@/components/ui/empty-state-card";
 import PageHeader from "@/components/ui/page-header";
 
-export default function IcoConverter() {
+export default function MultiSizePngExporter() {
   const {
     images,
     addImages,
@@ -27,10 +27,9 @@ export default function IcoConverter() {
     updateImageSettings,
     applyMasterSettings,
     processAllImages,
-  } = useIcoProcessor();
+  } = useImageProcessor();
 
-  const [MasterSettings, setMasterSettings] =
-    useState(DEFAULT_ICO_OPTIONS);
+  const [MasterSettings, setMasterSettings] = useState(DEFAULT_OPTIONS);
   const [showMasterSettings, setShowMasterSettings] = useState(false);
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
 
@@ -39,11 +38,11 @@ export default function IcoConverter() {
   const handleDownloadAll = () => {
     const completedImages = images.filter((img) => img.status === "completed");
     completedImages.forEach((image, index) => {
-      setTimeout(() => downloadIco(image), index * 500);
+      setTimeout(() => downloadImageBlobs(image), index * 500);
     });
   };
 
-  const handleMasterSave = (options: IcoOptions) => {
+  const handleMasterSave = (options: PngConversionOptions) => {
     setMasterSettings(options);
     applyMasterSettings(options);
     setShowMasterSettings(false);
@@ -53,10 +52,8 @@ export default function IcoConverter() {
     <div className="min-h-screen bg-background">
       <div className="max-w-5xl mx-auto p-4 md:p-8 space-y-6">
         <PageHeader
-          title={"Image to .ICO Converter"}
-          desc={
-            "Convert images to standard Windows .ICO format. Bundles multiple sizes (e.g. 16x16, 32x32) into a single file."
-          }
+          title={"Multi-Size PNG Exporter"}
+          desc={"Export your images to multiple PNG files at different sizes."}
         />
 
         <DropZone
@@ -123,7 +120,7 @@ export default function IcoConverter() {
       >
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Master Icon Settings</DialogTitle>
+            <DialogTitle>Master Settings</DialogTitle>
           </DialogHeader>
           <SettingsForm
             initialOptions={MasterSettings}
@@ -140,7 +137,7 @@ export default function IcoConverter() {
       >
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Icon Settings: {selectedImage?.file.name}</DialogTitle>
+            <DialogTitle>File Settings: {selectedImage?.file.name}</DialogTitle>
           </DialogHeader>
           {selectedImage && (
             <SettingsForm

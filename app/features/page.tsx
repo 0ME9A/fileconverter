@@ -70,11 +70,11 @@ export default function FeaturesPage() {
     },
     {
       icon: Palette,
-      title: "Universal Settings",
+      title: "Master Settings",
       description:
         "Set default conversion options that apply to all files, or customize settings for individual files as needed.",
       highlights: [
-        "Global presets",
+        "Master presets",
         "Per-file customization",
         "Save preferences",
       ],

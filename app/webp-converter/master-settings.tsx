@@ -222,7 +222,7 @@ export function MasterSettings({
             {/* Auto Orient */}
             <div className="flex items-start space-x-2">
               <Checkbox
-                id="universal-auto-orient"
+                id="Master-auto-orient"
                 checked={masterOptions.autoOrient}
                 onCheckedChange={(checked) =>
                   setMasterOptions((prev) => ({
@@ -233,7 +233,7 @@ export function MasterSettings({
               />
               <div className="space-y-1">
                 <label
-                  htmlFor="universal-auto-orient"
+                  htmlFor="Master-auto-orient"
                   className="text-sm font-medium cursor-pointer"
                 >
                   Auto Orient
@@ -248,7 +248,7 @@ export function MasterSettings({
             {/* Strip Metadata */}
             <div className="flex items-start space-x-2">
               <Checkbox
-                id="universal-strip-metadata"
+                id="Master-strip-metadata"
                 checked={masterOptions.stripMetadata}
                 onCheckedChange={(checked) =>
                   setMasterOptions((prev) => ({
@@ -259,7 +259,7 @@ export function MasterSettings({
               />
               <div className="space-y-1">
                 <label
-                  htmlFor="universal-strip-metadata"
+                  htmlFor="Master-strip-metadata"
                   className="text-sm font-medium cursor-pointer"
                 >
                   Strip Metadata

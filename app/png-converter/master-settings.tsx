@@ -127,7 +127,7 @@ export function MasterSettings({
 
             <div className="flex items-start space-x-2">
               <Checkbox
-                id="universal-preserve-transparency"
+                id="Master-preserve-transparency"
                 checked={masterOptions.preserveTransparency}
                 onCheckedChange={(checked) =>
                   setMasterOptions((prev) => ({
@@ -138,7 +138,7 @@ export function MasterSettings({
               />
               <div className="space-y-1">
                 <label
-                  htmlFor="universal-preserve-transparency"
+                  htmlFor="Master-preserve-transparency"
                   className="text-sm font-medium cursor-pointer"
                 >
                   Preserve Transparency
@@ -152,7 +152,7 @@ export function MasterSettings({
             {/* Strip Metadata */}
             <div className="flex items-start space-x-2">
               <Checkbox
-                id="universal-strip-metadata"
+                id="Master-strip-metadata"
                 checked={masterOptions.stripMetadata}
                 onCheckedChange={(checked) =>
                   setMasterOptions((prev) => ({
@@ -163,7 +163,7 @@ export function MasterSettings({
               />
               <div className="space-y-1">
                 <label
-                  htmlFor="universal-strip-metadata"
+                  htmlFor="Master-strip-metadata"
                   className="text-sm font-medium cursor-pointer"
                 >
                   Strip Metadata
@@ -267,7 +267,7 @@ export function MasterSettings({
     //         {/* Strip Metadata */}
     //         <div className="flex items-start space-x-2">
     //           <Checkbox
-    //             id="universal-strip-metadata"
+    //             id="Master-strip-metadata"
     //             checked={masterOptions.stripMetadata}
     //             onCheckedChange={(checked) =>
     //               setMasterOptions((prev) => ({
@@ -278,7 +278,7 @@ export function MasterSettings({
     //           />
     //           <div className="space-y-1">
     //             <label
-    //               htmlFor="universal-strip-metadata"
+    //               htmlFor="Master-strip-metadata"
     //               className="text-sm font-medium cursor-pointer"
     //             >
     //               Strip Metadata
