@@ -2,18 +2,41 @@
 import { Button } from "@/components/ui/button";
 import { TOOLS } from "../_src/data/tools";
 import { ArrowRight } from "lucide-react";
-import { RefObject } from "react";
+import { useRef } from "react";
 import SectionHeader from "@/components/ui/section-header";
 import ToolCard from "@/components/ui/tool-card";
 import Link from "next/link";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-type TProps = {
-  toolsRef: RefObject<HTMLDivElement | null>;
-};
+gsap.registerPlugin(ScrollTrigger);
 
-export default function Tools({ toolsRef }: TProps) {
+export default function Tools() {
+  const container = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      // Tools animation with scale effect
+      gsap.from(".tool-card", {
+        scrollTrigger: {
+          trigger: container.current,
+          start: "top 75%",
+          end: "bottom 25%",
+          toggleActions: "play reverse play reverse",
+        },
+        y: 40,
+        scale: 0.95,
+        stagger: 0.1,
+        duration: 0.7,
+        ease: "power2.out",
+      });
+    },
+    { scope: container },
+  );
+
   return (
-    <section ref={toolsRef} id="tools" className="py-20">
+    <section ref={container} id="tools" className="py-20">
       <div className="max-w-6xl mx-auto px-4">
         <SectionHeader
           title={"Available Tools"}
@@ -21,16 +44,8 @@ export default function Tools({ toolsRef }: TProps) {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {TOOLS.map((tool, index) => (
-            <div key={index}>
-              {tool.status === "available" && tool.href ? (
-                <Link href={tool.href}>
-                  <ToolCard data={tool} />
-                </Link>
-              ) : (
-                <ToolCard data={tool} />
-              )}
-            </div>
+          {TOOLS.map((tool) => (
+            <ToolCard key={tool.id} data={tool} />
           ))}
         </div>
         <div className="text-center mt-12">

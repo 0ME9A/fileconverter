@@ -2,14 +2,8 @@
 
 import { ImageFile } from "./type";
 
-export const formatFileSize = (bytes: number) => {
-  if (bytes < 1024) return bytes + " B";
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
-  return (bytes / (1024 * 1024)).toFixed(2) + " MB";
-};
-
 export const convertImageToPngs = async (
-  imageFile: ImageFile
+  imageFile: ImageFile,
 ): Promise<Map<number, Blob>> => {
   const pngBlobs = new Map<number, Blob>();
 
@@ -29,9 +23,7 @@ export const convertImageToPngs = async (
         canvas.width = size;
         canvas.height = size;
 
-        // Draw white background for transparency
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fillRect(0, 0, size, size);
+        // Draw original image directly to preserve transparency
         ctx.drawImage(img, 0, 0, size, size);
 
         canvas.toBlob(
@@ -40,7 +32,7 @@ export const convertImageToPngs = async (
             else reject(new Error("Failed to convert image"));
           },
           "image/png",
-          1.0
+          1.0,
         );
       };
 

@@ -1,15 +1,9 @@
 import { ImageFile, IcoPresetType } from "./types";
 
-export const formatFileSize = (bytes: number) => {
-  if (bytes < 1024) return bytes + " B";
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
-  return (bytes / (1024 * 1024)).toFixed(2) + " MB";
-};
-
 // Helper to determine the list of sizes based on the single preset
 const getSizesFromPreset = (
   preset: IcoPresetType,
-  customSize?: number
+  customSize?: number,
 ): number[] => {
   if (preset === "favicon") return [16, 32, 48];
   if (preset === "windows") return [16, 24, 32, 48, 64, 256];
@@ -21,7 +15,7 @@ const getSizesFromPreset = (
 
 const createPngBlob = async (
   img: HTMLImageElement,
-  size: number
+  size: number,
 ): Promise<Blob> => {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
@@ -48,7 +42,6 @@ const createPngBlob = async (
   });
 };
 
-
 export const convertToIco = async (imageFile: ImageFile): Promise<Blob> => {
   return new Promise((resolve, reject) => {
     const img = document.createElement("img");
@@ -59,7 +52,7 @@ export const convertToIco = async (imageFile: ImageFile): Promise<Blob> => {
         // 1. Determine sizes based on the preset selection
         const sizes = getSizesFromPreset(
           imageFile.options.preset,
-          imageFile.options.customSize
+          imageFile.options.customSize,
         );
 
         const pngBlobs: Blob[] = [];
@@ -69,7 +62,7 @@ export const convertToIco = async (imageFile: ImageFile): Promise<Blob> => {
           pngBlobs.push(blob);
         }
 
-        // --- ICO BINARY CONSTRUCTION (Same as before) ---
+        // --- ICO BINARY CONSTRUCTION ---
         const headerSize = 6;
         const directorySize = 16;
         const numImages = pngBlobs.length;

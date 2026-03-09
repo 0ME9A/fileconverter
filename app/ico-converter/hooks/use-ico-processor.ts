@@ -37,8 +37,8 @@ export function useIcoProcessor() {
       prev.map((img) =>
         img.id === id
           ? { ...img, options, useCustomSettings: true, status: "pending" }
-          : img
-      )
+          : img,
+      ),
     );
   };
 
@@ -47,8 +47,8 @@ export function useIcoProcessor() {
       prev.map((img) =>
         img.useCustomSettings
           ? img
-          : { ...img, options: { ...options }, status: "pending" }
-      )
+          : { ...img, options: { ...options }, status: "pending" },
+      ),
     );
   };
 
@@ -57,18 +57,31 @@ export function useIcoProcessor() {
       if (image.status === "pending") {
         setImages((prev) =>
           prev.map((img) =>
-            img.id === image.id ? { ...img, status: "processing" } : img
-          )
+            img.id === image.id ? { ...img, status: "processing" } : img,
+          ),
         );
 
         try {
+          const startTime = performance.now();
           const blob = await convertToIco(image);
+          const endTime = performance.now();
+
+          // Log stats
+          import("@/lib/stats-client").then(({ logConversionStat }) => {
+            logConversionStat({
+              originalType: image.file.type,
+              convertedType: "image/x-icon",
+              processingTime: Math.round(endTime - startTime),
+              fileSize: image.file.size,
+            });
+          });
+
           setImages((prev) =>
             prev.map((img) =>
               img.id === image.id
                 ? { ...img, status: "completed", outputBlob: blob }
-                : img
-            )
+                : img,
+            ),
           );
         } catch (error) {
           console.error("Conversion error:", error);

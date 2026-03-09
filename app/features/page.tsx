@@ -16,11 +16,19 @@ import {
 import PageHeader from "@/components/ui/page-header";
 import HomeButton from "@/components/ui/home-button";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Features | FileConverter",
+  title: "Features | FileConverter - Powerful & Private Conversion",
   description:
-    "Discover all the powerful features of FileConverter: client-side processing, batch conversion, advanced options, and more.",
+    "Explore the powerful features of FileConverter: 100% private client-side processing, batch conversion, advanced image options, and more.",
+  keywords: [
+    "image conversion features",
+    "batch processing",
+    "client-side conversion",
+    "privacy tools",
+    "advanced image settings",
+  ],
 };
 
 export default function FeaturesPage() {
@@ -177,13 +185,12 @@ export default function FeaturesPage() {
               Experience all these features for free. No sign-up, no
               subscriptions, no hassle.
             </p>
-            <Link
-              href="/webp-converter"
-              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-            >
-              <Upload className="w-5 h-5" />
-              Start Converting Now
-            </Link>
+            <Button asChild>
+              <Link href="/webp-converter">
+                <Upload className="w-5 h-5" />
+                Start Converting Now
+              </Link>
+            </Button>
           </div>
 
           {/* Privacy Highlight */}

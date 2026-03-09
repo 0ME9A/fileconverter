@@ -1,159 +1,66 @@
 "use client";
-
-import { DropZone } from "../multi-size-png-exporter/components/DropZone";
-import { useIcoProcessor } from "./hooks/use-ico-processor";
-import { Settings2, Download, Trash2 } from "lucide-react";
-import { DEFAULT_ICO_OPTIONS, IcoOptions } from "./types";
+import React from "react";
+import { IcoOptions, DEFAULT_ICO_OPTIONS } from "./types";
 import { SettingsForm } from "./components/SettingsForm";
-import { ImageCard } from "./components/ImageCard";
-import { Button } from "@/components/ui/button";
-import { downloadIco } from "./utils";
-import { useState } from "react";
+import ConverterPage from "@/components/converter-page";
+import { TConverterImage } from "@/hooks/use-converter";
+import { convertToIco } from "./utils";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import EmptyStateCard from "@/components/ui/empty-state-card";
-import PageHeader from "@/components/ui/page-header";
 
 export default function IcoConverter() {
-  const {
-    images,
-    addImages,
-    removeImage,
-    clearAll,
-    updateImageSettings,
-    applyMasterSettings,
-    processAllImages,
-  } = useIcoProcessor();
-
-  const [MasterSettings, setMasterSettings] =
-    useState(DEFAULT_ICO_OPTIONS);
-  const [showMasterSettings, setShowMasterSettings] = useState(false);
-  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
-
-  const selectedImage = images.find((img) => img.id === selectedImageId);
-
-  const handleDownloadAll = () => {
-    const completedImages = images.filter((img) => img.status === "completed");
-    completedImages.forEach((image, index) => {
-      setTimeout(() => downloadIco(image), index * 500);
-    });
-  };
-
-  const handleMasterSave = (options: IcoOptions) => {
-    setMasterSettings(options);
-    applyMasterSettings(options);
-    setShowMasterSettings(false);
+  const convertImage = async (
+    imageFile: TConverterImage<IcoOptions>,
+  ): Promise<Blob> => {
+    // Adapt TConverterImage<IcoOptions> to the ImageFile type expected by convertToIco
+    // Since they are shaped similarly, we can pass it through, but we should be explicit
+    return convertToIco(imageFile as any);
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-5xl mx-auto p-4 md:p-8 space-y-6">
-        <PageHeader
-          title={"Image to .ICO Converter"}
-          desc={
-            "Convert images to standard Windows .ICO format. Bundles multiple sizes (e.g. 16x16, 32x32) into a single file."
-          }
-        />
-
-        <DropZone
-          onFilesDropped={(files) => addImages(files, MasterSettings)}
-        />
-
-        {images.length > 0 && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">
-                Images ({images.length})
-              </h2>
-              <div className="flex gap-2 flex-wrap">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowMasterSettings(true)}
-                  className="gap-2"
-                >
-                  <Settings2 className="w-4 h-4" /> Master Settings
-                </Button>
-                <Button
-                  onClick={processAllImages}
-                  disabled={images.every((img) => img.status === "completed")}
-                >
-                  Convert All
-                </Button>
-                <Button
-                  onClick={handleDownloadAll}
-                  variant="outline"
-                  disabled={!images.some((img) => img.status === "completed")}
-                >
-                  <Download className="w-4 h-4 mr-2" /> Download All
-                </Button>
-                <Button
-                  onClick={clearAll}
-                  variant="outline"
-                  className="gap-2 bg-transparent"
-                >
-                  <Trash2 className="w-4 h-4" /> Clear All
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              {images.map((image) => (
-                <ImageCard
-                  key={image.id}
-                  image={image}
-                  onRemove={removeImage}
-                  onSettingsClick={setSelectedImageId}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {images.length === 0 && <EmptyStateCard />}
-      </div>
-
-      {/* Master Settings Dialog */}
-      <Dialog
-        open={showMasterSettings}
-        onOpenChange={setShowMasterSettings}
-      >
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Master Icon Settings</DialogTitle>
-          </DialogHeader>
-          <SettingsForm
-            initialOptions={MasterSettings}
-            onSave={handleMasterSave}
-            onCancel={() => setShowMasterSettings(false)}
-          />
-        </DialogContent>
-      </Dialog>
-
-      {/* Individual Image Settings Dialog */}
-      <Dialog
-        open={!!selectedImage}
-        onOpenChange={(open) => !open && setSelectedImageId(null)}
-      >
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Icon Settings: {selectedImage?.file.name}</DialogTitle>
-          </DialogHeader>
-          {selectedImage && (
+    <ConverterPage<IcoOptions>
+      title="Image to .ICO Converter"
+      description="Convert images to standard Windows .ICO format. Bundles multiple sizes (e.g. 16x16, 32x32) into a single file. All processing happens locally in your browser."
+      convertedType="image/x-icon"
+      extension="ico"
+      defaultOptions={DEFAULT_ICO_OPTIONS}
+      convertFn={convertImage}
+      AdvancedSettings={({ image, open, onOpenChange, onSave }) => (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+          <DialogContent className="max-w-2xl bg-card/95 backdrop-blur-xl border-border/50">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold tracking-tight">
+                Icon Settings: {image.file.name}
+              </DialogTitle>
+            </DialogHeader>
             <SettingsForm
-              initialOptions={selectedImage.options}
-              onSave={(opts) => {
-                updateImageSettings(selectedImage.id, opts);
-                setSelectedImageId(null);
-              }}
-              onCancel={() => setSelectedImageId(null)}
+              initialOptions={image.options}
+              onSave={onSave}
+              onCancel={() => onOpenChange(false)}
             />
-          )}
-        </DialogContent>
-      </Dialog>
-    </div>
+          </DialogContent>
+        </Dialog>
+      )}
+      MasterSettings={({ options, open, onOpenChange, onSave, onReset }) => (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+          <DialogContent className="max-w-2xl bg-card/95 backdrop-blur-xl border-border/50">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold tracking-tight">
+                Master Icon Settings
+              </DialogTitle>
+            </DialogHeader>
+            <SettingsForm
+              initialOptions={options}
+              onSave={onSave}
+              onCancel={() => onOpenChange(false)}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
+    />
   );
 }

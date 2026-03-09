@@ -1,15 +1,38 @@
 import { TRUST_ITEMS } from "../_src/data/trust";
-import { RefObject } from "react";
+import { useRef } from "react";
 import SectionHeader from "@/components/ui/section-header";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-type TProps = {
-  trustRef: RefObject<HTMLDivElement | null>;
-};
+gsap.registerPlugin(ScrollTrigger);
 
-export default function Trust({ trustRef }: TProps) {
+export default function Trust() {
+  const container = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      // Trust section animation
+      gsap.from(".trust-item", {
+        scrollTrigger: {
+          trigger: container.current,
+          start: "top 75%",
+          end: "bottom 25%",
+          toggleActions: "play reverse play reverse",
+        },
+        opacity: 0,
+        x: -30,
+        stagger: 0.1,
+        duration: 0.6,
+        ease: "power2.out",
+      });
+    },
+    { scope: container },
+  );
+
   return (
-    <section ref={trustRef} className="py-20 bg-muted/30">
-      <div className="max-w-4xl mx-auto px-4">
+    <section ref={container} className="py-20 bg-muted/30">
+      <div className="max-w-6xl mx-auto px-4">
         <SectionHeader
           title={"Built for Privacy & Performance"}
           desc={"Everything you need in a modern file converter"}

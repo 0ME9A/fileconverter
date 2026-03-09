@@ -5,10 +5,7 @@ import { useState } from "react";
 export function useImageProcessor() {
   const [images, setImages] = useState<ImageFile[]>([]);
 
-  const addImages = (
-    files: File[],
-    MasterSettings: PngConversionOptions
-  ) => {
+  const addImages = (files: File[], MasterSettings: PngConversionOptions) => {
     const imageFiles = files.filter((file) => file.type.startsWith("image/"));
     const newImages: ImageFile[] = imageFiles.map((file) => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -40,8 +37,8 @@ export function useImageProcessor() {
       prev.map((img) =>
         img.id === id
           ? { ...img, options, useCustomSettings: true, status: "pending" }
-          : img
-      )
+          : img,
+      ),
     );
   };
 
@@ -50,8 +47,8 @@ export function useImageProcessor() {
       prev.map((img) =>
         img.useCustomSettings
           ? img
-          : { ...img, options: { ...options }, status: "pending" }
-      )
+          : { ...img, options: { ...options }, status: "pending" },
+      ),
     );
   };
 
@@ -60,18 +57,31 @@ export function useImageProcessor() {
       if (image.status === "pending") {
         setImages((prev) =>
           prev.map((img) =>
-            img.id === image.id ? { ...img, status: "processing" } : img
-          )
+            img.id === image.id ? { ...img, status: "processing" } : img,
+          ),
         );
 
         try {
+          const startTime = performance.now();
           const blobs = await convertImageToPngs(image);
+          const endTime = performance.now();
+
+          // Log stats
+          import("@/lib/stats-client").then(({ logConversionStat }) => {
+            logConversionStat({
+              originalType: image.file.type,
+              convertedType: "image/png",
+              processingTime: Math.round(endTime - startTime),
+              fileSize: image.file.size,
+            });
+          });
+
           setImages((prev) =>
             prev.map((img) =>
               img.id === image.id
                 ? { ...img, status: "completed", outputBlobs: blobs }
-                : img
-            )
+                : img,
+            ),
           );
         } catch (error) {
           console.error("Conversion error:", error);

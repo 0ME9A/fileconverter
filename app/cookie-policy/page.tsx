@@ -4,9 +4,15 @@ import { companyInfo } from "../_src/data/site-data";
 import HomeButton from "@/components/ui/home-button";
 
 export const metadata: Metadata = {
-  title: "Cookie Policy | FileConverter",
+  title: "Cookie Policy | FileConverter - Minimal & Essential",
   description:
-    "Learn about how FileConverter uses cookies and manages your preferences.",
+    "Learn about our minimal cookie usage. FileConverter only uses essential session and preference cookies for a better experience.",
+  keywords: [
+    "cookie policy",
+    "browser storage",
+    "essential cookies",
+    "privacy settings",
+  ],
 };
 
 export default function CookiesPolicyPage() {
@@ -76,6 +82,10 @@ export default function CookiesPolicyPage() {
                 <li>
                   <strong>Conversion Settings:</strong> Remembers your preferred
                   conversion options (quality, compression, etc.)
+                </li>
+                <li>
+                  <strong>Consent Preference:</strong> Remembers your choice
+                  regarding our cookie notice (Essentials vs. All)
                 </li>
                 <li>
                   <strong>Session Management:</strong> Maintains your session

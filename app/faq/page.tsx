@@ -4,11 +4,24 @@ import { faqs } from "../_src/data/faq";
 import HomeButton from "@/components/ui/home-button";
 import PageHeader from "@/components/ui/page-header";
 import Link from "next/link";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "FAQ | FileConverter",
+  title: "FAQ | FileConverter - Common Questions & Answers",
   description:
-    "Frequently asked questions about FileConverter's file conversion tools and privacy features.",
+    "Find answers to frequently asked questions about FileConverter's image conversion tools, privacy features, and local processing technology.",
+  keywords: [
+    "file conversion faq",
+    "is fileconverter safe",
+    "how to convert images",
+    "private conversion help",
+  ],
 };
 
 export default function FAQPage() {
@@ -27,19 +40,22 @@ export default function FAQPage() {
           />
 
           {/* FAQ Items */}
-          <div className="space-y-4">
+          <Accordion type="single" collapsible className="w-full space-y-4">
             {faqs.map((faq, index) => (
-              <details key={index} className="group bg-card border rounded-lg">
-                <summary className="flex items-center justify-between cursor-pointer p-6 font-semibold text-lg hover:text-primary transition-colors">
-                  <span>{faq.question}</span>
-                  <ChevronDown className="w-5 h-5 text-muted-foreground group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="px-6 pb-6 text-muted-foreground leading-relaxed">
+              <AccordionItem
+                key={index}
+                value={`item-${index}`}
+                className="bg-card border rounded-lg px-6 overflow-hidden"
+              >
+                <AccordionTrigger className="text-left font-semibold text-lg hover:text-primary transition-colors hover:no-underline py-6">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground leading-relaxed text-base pb-6">
                   {faq.answer}
-                </div>
-              </details>
+                </AccordionContent>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
 
           {/* Still Have Questions */}
           <div className="bg-linear-to-br from-primary/10 via-primary/5 to-background border rounded-lg p-8 text-center">
@@ -48,12 +64,9 @@ export default function FAQPage() {
               Can&apos;t find the answer you&apos;re looking for? Feel free to
               reach out to us directly.
             </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-            >
-              Contact Support
-            </Link>
+            <Button asChild>
+              <Link href="/contact">Contact Support</Link>
+            </Button>
           </div>
         </div>
       </div>

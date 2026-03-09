@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 import Navbar from "@/components/navbar";
 import "./globals.css";
 import { Footer } from "@/components/footer";
+import CookieBanner from "@/components/cookie-banner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,35 +39,10 @@ export default function RootLayout({
           <Navbar />
           {children}
           <Footer />
+          <CookieBanner />
         </ThemeProvider>
         <Analytics />
       </body>
     </html>
   );
 }
-
-// export default function RootLayout({
-//   children,
-// }: Readonly<{
-//   children: React.ReactNode;
-// }>) {
-//   return (
-//     <html lang="en">
-//       <body
-//         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-//       >
-//         <ThemeProvider
-//           attribute="class"
-//           defaultTheme="system"
-//           enableSystem
-//           disableTransitionOnChange
-//         >
-//           <Navbar />
-//           {children}
-//           <Footer />
-//         </ThemeProvider>
-//         <Analytics />
-//       </body>
-//     </html>
-//   );
-// }
