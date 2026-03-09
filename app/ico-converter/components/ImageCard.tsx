@@ -1,9 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import { Check, Download, Settings2, X, FileImage } from "lucide-react";
-import { formatFileSize, downloadIco } from "../utils";
+import { downloadIco } from "../utils";
 import { ImageFile, PRESET_OPTIONS } from "../types"; // Import options to lookup labels
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { formatFileSize } from "@/app/_src/utils";
 
 interface ImageCardProps {
   image: ImageFile;
