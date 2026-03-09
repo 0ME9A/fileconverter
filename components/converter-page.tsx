@@ -15,7 +15,9 @@ type TProps<T> = {
   convertedType: string;
   extension: string;
   defaultOptions: T;
-  convertFn: (image: TConverterImage<T>) => Promise<Blob>;
+  convertFn: (
+    image: TConverterImage<T>,
+  ) => Promise<Blob | Map<string | number, Blob>>;
   AdvancedSettings: React.ComponentType<{
     image: TConverterImage<T>;
     open: boolean;
