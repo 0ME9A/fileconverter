@@ -1,9 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import { formatFileSize, downloadImageBlobs } from "../utils";
+import { downloadImageBlobs } from "../utils";
 import { Check, Download, Settings2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ImageFile } from "../type";
+import { formatFileSize } from "@/app/_src/utils";
 
 interface ImageCardProps {
   image: ImageFile;
