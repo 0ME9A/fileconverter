@@ -105,12 +105,12 @@ export type TFeature = {
   icon: LucideIcon;
 };
 
-// image
 export type TBaseImage = {
   id: string;
   preview: string;
   file: File;
   status: "pending" | "processing" | "completed";
   outputSize?: number;
+  outputSizes?: Record<string | number, number>;
   useCustomSettings?: boolean;
 };

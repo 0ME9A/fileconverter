@@ -31,6 +31,12 @@ export const navLinks: TNavLinks[] = [
     href: "/features",
     subLinks: null,
   },
+  {
+    id: "n4",
+    label: "Stats",
+    href: "/stats",
+    subLinks: null,
+  },
 ];
 
 type TFooterLinks = {
@@ -94,6 +100,11 @@ export const footerLinks: TFooterLinks = [
         id: "r3",
         label: "FAQ",
         href: "/faq",
+      },
+      {
+        id: "r4",
+        label: "Statistics",
+        href: "/stats",
       },
       {
         id: "c4",

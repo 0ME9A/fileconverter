@@ -57,6 +57,10 @@ export const metadataDefault: Metadata = {
     "privacy-focused converter",
     "browser-based converter",
     "no upload converter",
+    "favicon generator",
+    "app icon creator",
+    "secure file processing",
+    "no registration converter",
   ],
 
   authors: [{ name: `${siteName} Team` }],

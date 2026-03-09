@@ -4,9 +4,16 @@ import { companyInfo } from "../_src/data/site-data";
 import HomeButton from "@/components/ui/home-button";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | FileConverter",
+  title: "Privacy Policy | FileConverter - Your Data Stays Yours",
   description:
-    "Learn how FileConverter protects your privacy with client-side processing and zero data collection.",
+    "At FileConverter, your privacy is our priority. Learn how we protect your data with 100% client-side processing and zero file uploads.",
+  keywords: [
+    "privacy policy",
+    "data protection",
+    "no upload conversion",
+    "secure image converter",
+    "gdpr compliance",
+  ],
 };
 
 export default function PrivacyPolicyPage() {
@@ -115,12 +122,15 @@ export default function PrivacyPolicyPage() {
               <ul>
                 <li>Saving your theme preference (light/dark mode)</li>
                 <li>Remembering your conversion settings</li>
+                <li>
+                  <strong>Storing your cookie consent preferences</strong>
+                </li>
                 <li>Essential functionality of the website</li>
               </ul>
               <p>
                 We do not use cookies for tracking, advertising, or analytics
-                purposes. You can disable cookies in your browser settings,
-                though this may affect some functionality.
+                purposes. You can manage your preferences via the notice banner
+                upon your first visit or by clearing your browser cache.
               </p>
             </div>
           </section>

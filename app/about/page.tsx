@@ -10,17 +10,26 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import PageHeader from "@/components/ui/page-header";
+import StatsCounter from "@/components/stats-counter";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "About Us | FileConverter",
+  title: "About Us | FileConverter - Privacy-First File Tools",
   description:
-    "Learn about FileConverter's mission to provide free, private, and fast file conversion tools for everyone.",
+    "Learn about FileConverter's mission to provide free, private, and fast file conversion tools. All processing happens locally in your browser for maximum security.",
+  keywords: [
+    "about fileconverter",
+    "private file conversion",
+    "browser-based tools",
+    "mission",
+    "privacy-first technology",
+  ],
 };
 
 export default function AboutUsPage() {
   return (
     <main className="min-h-screen bg-background">
-      <div className="max-w-4xl mx-auto px-4 py-12">
+      <div className="max-w-6xl mx-auto px-4 py-12">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
@@ -55,6 +64,47 @@ export default function AboutUsPage() {
               means your files never leave your device, ensuring complete
               privacy and security.
             </p>
+          </section>
+
+          {/* Impact Stats Row */}
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-8 py-10 border-y border-border/50">
+            <div className="text-center space-y-2">
+              <div className="text-primary/60 uppercase text-[10px] tracking-widest font-bold">
+                Privacy Preserved
+              </div>
+              <StatsCounter
+                type="totalFiles"
+                className="text-4xl font-black text-primary block"
+              />
+              <div className="text-xs text-muted-foreground">
+                Files converted securely
+              </div>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="text-primary/60 uppercase text-[10px] tracking-widest font-bold">
+                Bandwidth Saved
+              </div>
+              <StatsCounter
+                type="totalSize"
+                className="text-4xl font-black text-primary block"
+              />
+              <div className="text-xs text-muted-foreground">
+                Processed locally
+              </div>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="text-primary/60 uppercase text-[10px] tracking-widest font-bold">
+                Instant Results
+              </div>
+              <StatsCounter
+                type="avgTime"
+                className="text-4xl font-black text-primary block"
+                showSuffix={true}
+              />
+              <div className="text-xs text-muted-foreground">
+                Average processing time
+              </div>
+            </div>
           </section>
 
           {/* Values Section */}
@@ -177,23 +227,20 @@ export default function AboutUsPage() {
             <p className="text-muted-foreground mb-6">
               Start converting your files with privacy and speed.
             </p>
-            <Link
-              href="/webp-converter"
-              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-            >
-              Try FileConverter Now
-            </Link>
+            <Button asChild>
+              <Link href="/webp-converter">Try FileConverter Now</Link>
+            </Button>
           </div>
 
           {/* Contact */}
-          <section className="space-y-4">
+          <section className="space-y-4 mx-auto p-4">
             <h2 className="text-2xl font-bold">Get in Touch</h2>
             <p className="text-muted-foreground">
               Have questions, suggestions, or feedback? We&apos;d love to hear
               from you.
             </p>
             <Link
-              href="/contact-us"
+              href="/contact"
               className="inline-flex items-center gap-2 text-primary hover:underline font-medium"
             >
               Contact Us

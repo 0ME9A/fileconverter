@@ -39,6 +39,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
     },
+    {
+      url: `${baseUrl}/tools`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
 
     // Tools
     {
@@ -46,6 +52,38 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/jpg-converter`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/png-converter`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/ico-converter`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/multi-size-png-exporter`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+
+    // Stats
+    {
+      url: `${baseUrl}/stats`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.5,
     },
 
     // Legal pages
@@ -56,7 +94,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
     {
-      url: `${baseUrl}/terms-of-use`,
+      url: `${baseUrl}/terms-of-service`,
       lastModified: now,
       changeFrequency: "yearly",
       priority: 0.3,

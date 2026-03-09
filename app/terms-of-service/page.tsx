@@ -4,9 +4,15 @@ import { companyInfo } from "../_src/data/site-data";
 import HomeButton from "@/components/ui/home-button";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | FileConverter",
+  title: "Terms of Service | FileConverter - Simple & Transparent",
   description:
-    "Terms and conditions for using FileConverter's online file conversion tools.",
+    "Read our Terms of Service to understand how to use FileConverter's free online tools responsibly and transparently.",
+  keywords: [
+    "terms of service",
+    "user agreement",
+    "legal information",
+    "website usage terms",
+  ],
 };
 
 export default function TermsOfServicePage() {

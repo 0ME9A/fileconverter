@@ -7,15 +7,22 @@ import ContactForm from "./contact-form";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Contact Us | FileConverter",
+  title: "Contact Us | FileConverter - Support & Feedback",
   description:
-    "Get in touch with the FileConverter team for support, feedback, or general inquiries. We’re happy to help.",
+    "Have questions or feedback? Get in touch with the FileConverter team. We're here to help with your file conversion needs.",
+  keywords: [
+    "contact fileconverter",
+    "support",
+    "feedback",
+    "feature request",
+    "image converter help",
+  ],
 };
 
 export default function ContactUsPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-4xl mx-auto px-4 py-12">
+    <div className="bg-background">
+      <div className="max-w-6xl mx-auto px-4 py-12">
         <HomeButton />
 
         <div className="space-y-8">

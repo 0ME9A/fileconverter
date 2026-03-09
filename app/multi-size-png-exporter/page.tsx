@@ -1,156 +1,103 @@
 "use client";
-
-import { useImageProcessor } from "./hooks/use-image-processor";
-import { DEFAULT_OPTIONS, PngConversionOptions } from "./type";
-import { Settings2, Download, Trash2 } from "lucide-react";
+import { PngConversionOptions } from "./type";
 import { SettingsForm } from "./components/SettingsForm";
-import { ImageCard } from "./components/ImageCard";
-import { DropZone } from "./components/DropZone";
-import { Button } from "@/components/ui/button";
-import { downloadImageBlobs } from "./utils";
-import { useState } from "react";
+import ConverterPage from "@/components/converter-page";
+import { TConverterImage } from "@/hooks/use-converter";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import EmptyStateCard from "@/components/ui/empty-state-card";
-import PageHeader from "@/components/ui/page-header";
+
+const defaultOptions: PngConversionOptions = {
+  sizes: [16, 32, 48],
+};
 
 export default function MultiSizePngExporter() {
-  const {
-    images,
-    addImages,
-    removeImage,
-    clearAll,
-    updateImageSettings,
-    applyMasterSettings,
-    processAllImages,
-  } = useImageProcessor();
+  const convertImage = async (
+    imageFile: TConverterImage<PngConversionOptions>,
+  ): Promise<Map<number, Blob>> => {
+    const pngBlobs = new Map<number, Blob>();
 
-  const [MasterSettings, setMasterSettings] = useState(DEFAULT_OPTIONS);
-  const [showMasterSettings, setShowMasterSettings] = useState(false);
-  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+    for (const size of imageFile.options.sizes) {
+      const blob = await new Promise<Blob>((resolve, reject) => {
+        const img = document.createElement("img");
+        img.crossOrigin = "anonymous";
 
-  const selectedImage = images.find((img) => img.id === selectedImageId);
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            reject(new Error("Failed to get canvas context"));
+            return;
+          }
 
-  const handleDownloadAll = () => {
-    const completedImages = images.filter((img) => img.status === "completed");
-    completedImages.forEach((image, index) => {
-      setTimeout(() => downloadImageBlobs(image), index * 500);
-    });
-  };
+          canvas.width = size;
+          canvas.height = size;
 
-  const handleMasterSave = (options: PngConversionOptions) => {
-    setMasterSettings(options);
-    applyMasterSettings(options);
-    setShowMasterSettings(false);
+          ctx.drawImage(img, 0, 0, size, size);
+
+          canvas.toBlob(
+            (b) => {
+              if (b) resolve(b);
+              else reject(new Error("Failed to convert image"));
+            },
+            "image/png",
+            1.0,
+          );
+        };
+
+        img.onerror = () => reject(new Error("Failed to load image"));
+        img.src = imageFile.preview;
+      });
+
+      pngBlobs.set(size, blob);
+    }
+
+    return pngBlobs;
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-5xl mx-auto p-4 md:p-8 space-y-6">
-        <PageHeader
-          title={"Multi-Size PNG Exporter"}
-          desc={"Export your images to multiple PNG files at different sizes."}
-        />
-
-        <DropZone
-          onFilesDropped={(files) => addImages(files, MasterSettings)}
-        />
-
-        {images.length > 0 && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">
-                Images ({images.length})
-              </h2>
-              <div className="flex gap-2 flex-wrap">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowMasterSettings(true)}
-                  className="gap-2"
-                >
-                  <Settings2 className="w-4 h-4" /> Master Settings
-                </Button>
-                <Button
-                  onClick={processAllImages}
-                  disabled={images.every((img) => img.status === "completed")}
-                >
-                  Convert All
-                </Button>
-                <Button
-                  onClick={handleDownloadAll}
-                  variant="outline"
-                  disabled={!images.some((img) => img.status === "completed")}
-                >
-                  <Download className="w-4 h-4 mr-2" /> Download All
-                </Button>
-                <Button
-                  onClick={clearAll}
-                  variant="outline"
-                  className="gap-2 bg-transparent"
-                >
-                  <Trash2 className="w-4 h-4" /> Clear All
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              {images.map((image) => (
-                <ImageCard
-                  key={image.id}
-                  image={image}
-                  onRemove={removeImage}
-                  onSettingsClick={setSelectedImageId}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {images.length === 0 && <EmptyStateCard />}
-      </div>
-
-      {/* Master Settings Dialog */}
-      <Dialog
-        open={showMasterSettings}
-        onOpenChange={setShowMasterSettings}
-      >
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Master Settings</DialogTitle>
-          </DialogHeader>
-          <SettingsForm
-            initialOptions={MasterSettings}
-            onSave={handleMasterSave}
-            onCancel={() => setShowMasterSettings(false)}
-          />
-        </DialogContent>
-      </Dialog>
-
-      {/* Individual Image Settings Dialog */}
-      <Dialog
-        open={!!selectedImage}
-        onOpenChange={(open) => !open && setSelectedImageId(null)}
-      >
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>File Settings: {selectedImage?.file.name}</DialogTitle>
-          </DialogHeader>
-          {selectedImage && (
+    <ConverterPage<PngConversionOptions>
+      title="Multi-Size PNG Exporter"
+      description="Export your images to multiple PNG files at different sizes. Perfect for creating assets for web and mobile apps. All processing happens locally in your browser."
+      convertedType="image/png"
+      extension="png"
+      defaultOptions={defaultOptions}
+      convertFn={convertImage}
+      AdvancedSettings={({ image, open, onOpenChange, onSave }) => (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+          <DialogContent className="max-w-2xl bg-card/95 backdrop-blur-xl border-border/50">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold tracking-tight">
+                File Settings: {image.file.name}
+              </DialogTitle>
+            </DialogHeader>
             <SettingsForm
-              initialOptions={selectedImage.options}
-              onSave={(opts) => {
-                updateImageSettings(selectedImage.id, opts);
-                setSelectedImageId(null);
-              }}
-              onCancel={() => setSelectedImageId(null)}
+              initialOptions={image.options}
+              onSave={onSave}
+              onCancel={() => onOpenChange(false)}
             />
-          )}
-        </DialogContent>
-      </Dialog>
-    </div>
+          </DialogContent>
+        </Dialog>
+      )}
+      MasterSettings={({ options, open, onOpenChange, onSave, onReset }) => (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+          <DialogContent className="max-w-2xl bg-card/95 backdrop-blur-xl border-border/50">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold tracking-tight">
+                Master Exporter Settings
+              </DialogTitle>
+            </DialogHeader>
+            <SettingsForm
+              initialOptions={options}
+              onSave={onSave}
+              onCancel={() => onOpenChange(false)}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
+    />
   );
 }

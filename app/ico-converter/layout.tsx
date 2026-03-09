@@ -2,9 +2,15 @@ import type React from "react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Image to .ICO Converter - Free Online Tool",
+  title: "Image to .ICO Converter - Windows Icons & Favicons | FileConverter",
   description:
-    "Convert PNG, JPG, and WEBP images to standard Windows .ICO format. Create multi-size icon bundles for Windows applications or website favicons. Features include auto-orientation and metadata stripping. All processing happens locally in your browser.",
+    "Convert PNG, JPG, and WEBP images to standard Windows .ICO format. Create multi-size icon bundles for Windows applications or website favicons. All processing happens locally in your browser.",
+  keywords: [
+    "favicon converter",
+    "windows icon maker",
+    "multi-size ico conversion",
+    "ico generator",
+  ],
 };
 
 export default function IcoConverterLayout({
