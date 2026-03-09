@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { PngConversionOptions } from "./type";
 import { SettingsForm } from "./components/SettingsForm";
 import ConverterPage from "@/components/converter-page";

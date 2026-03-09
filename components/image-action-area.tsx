@@ -2,7 +2,6 @@
 import { Download, Settings2, Trash2, Zap } from "lucide-react";
 import { TBaseImage } from "@/app/_src/ts";
 import { Button } from "./ui/button";
-import React from "react";
 
 type TProps<T extends TBaseImage> = {
   images: T[];

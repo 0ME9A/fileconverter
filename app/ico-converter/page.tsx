@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { IcoOptions, DEFAULT_ICO_OPTIONS } from "./types";
 import { SettingsForm } from "./components/SettingsForm";
 import ConverterPage from "@/components/converter-page";

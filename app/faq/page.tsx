@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ChevronDown } from "lucide-react";
 import { faqs } from "../_src/data/faq";
 import HomeButton from "@/components/ui/home-button";
 import PageHeader from "@/components/ui/page-header";
