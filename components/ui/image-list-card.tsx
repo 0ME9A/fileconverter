@@ -1,10 +1,9 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import { Check, Download, Settings2, X, Loader2 } from "lucide-react";
+import { Check, Download, Settings2, X, Loader2, Eye } from "lucide-react";
 import { TBaseImage } from "@/app/_src/ts";
 import { Button } from "./button";
-import React from "react";
 
 type Props<T extends TBaseImage> = {
   image: T;
@@ -12,6 +11,7 @@ type Props<T extends TBaseImage> = {
   setSelectedImage: (id: string | null) => void;
   downloadImage: (image: T) => void;
   removeImage: (id: string) => void;
+  viewImage?: (image: T) => void;
 };
 
 export default function ImageListCard<T extends TBaseImage>({
@@ -20,9 +20,10 @@ export default function ImageListCard<T extends TBaseImage>({
   setSelectedImage,
   downloadImage,
   removeImage,
+  viewImage,
 }: Props<T>) {
   return (
-    <div className="glass-card group overflow-hidden transition-all duration-300 hover:shadow-glow hover:shadow-primary/5 hover:-translate-y-0.5 border-border/50">
+    <div className="glass-card group overflow-hidden transition-all duration-300 hover:shadow-glow hover:shadow-primary/5 hover:-translate-y-0.5 border-border/50 rounded-3xl">
       <div className="p-4 flex items-center gap-5">
         {/* Preview Container */}
         <div className="relative w-16 h-16 rounded-xl bg-muted/50 overflow-hidden shrink-0 border border-border/50 group-hover:border-primary/30 transition-colors">
@@ -51,20 +52,21 @@ export default function ImageListCard<T extends TBaseImage>({
             )}
           </div>
 
-          <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground">
-            <span className="bg-muted/50 px-2 py-0.5 rounded text-[11px]">
+          <div className="flex items-center gap-1 sm:gap-3 text-sm font-medium text-muted-foreground">
+            <span className="bg-muted/50 px-2 py-0.5 rounded text-[8px] sm:text-[11px]">
               {formatFileSize(image.file.size)}
             </span>
 
             {image.status === "completed" && image.outputSize && (
               <>
                 <span className="text-primary/40">→</span>
-                <span className="text-primary bg-primary/5 px-2 py-0.5 rounded text-[11px] border border-primary/10">
+                <span className="text-primary bg-primary/5 px-2 py-0.5 rounded text-[8px] sm:text-[11px] border border-primary/10">
                   {formatFileSize(image.outputSize)}
                 </span>
                 <span className="text-[10px] text-green-500 font-bold flex items-center gap-1 ml-1 animate-in fade-in slide-in-from-left-2 duration-500">
                   <Check className="w-3 h-3 stroke-3" />
-                  READY
+
+                  <span className="hidden sm:block">READY</span>
                 </span>
               </>
             )}
@@ -84,15 +86,28 @@ export default function ImageListCard<T extends TBaseImage>({
           </Button>
 
           {image.status === "completed" && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full bg-primary/5 text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 animate-in zoom-in"
-              onClick={() => downloadImage(image)}
-              title="Download File"
-            >
-              <Download className="w-4.5 h-4.5" />
-            </Button>
+            <>
+              {viewImage && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full bg-accent/10 text-accent-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-300 animate-in zoom-in mr-1"
+                  onClick={() => viewImage(image)}
+                  title="View Result"
+                >
+                  <Eye className="w-4.5 h-4.5" />
+                </Button>
+              )}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full bg-primary/5 text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 animate-in zoom-in"
+                onClick={() => downloadImage(image)}
+                title="Download File"
+              >
+                <Download className="w-4.5 h-4.5" />
+              </Button>
+            </>
           )}
 
           <Button
