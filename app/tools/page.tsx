@@ -38,13 +38,7 @@ export default function page() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {TOOLS.map((tool, index) => (
               <div key={index}>
-                {tool.status === "available" && tool.href ? (
-                  <Link href={tool.href}>
-                    <ToolCard data={tool} />
-                  </Link>
-                ) : (
-                  <ToolCard data={tool} />
-                )}
+                <ToolCard data={tool} />
               </div>
             ))}
           </div>
