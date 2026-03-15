@@ -89,7 +89,7 @@ export default function UploadArea({
         </Button>
 
         {highlights && (
-          <div className="pt-4 flex items-center justify-center gap-6 text-xs text-muted-foreground font-medium">
+          <div className="pt-4 flex items-center justify-center flex-wrap gap-2 sm:gap-6 text-xs text-muted-foreground font-medium">
             {highlights.map((highlight, index) => (
               <span key={highlight} className="flex items-center gap-1.5">
                 <span

@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { TConversionOptions } from "./type";
 import { AdvancedSettings } from "./advanced-settings";
 import { MasterSettings } from "./master-settings";

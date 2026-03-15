@@ -75,6 +75,21 @@ export const TOOLS: TToolCard[] = [
     icon: FileImage,
   },
   {
+    id: "bg-remover",
+    title: "AI Background Remover",
+    description:
+      "Remove backgrounds from multiple images at once using advanced AI. Support for custom background colors.",
+    features: [
+      "Batch AI removal",
+      "Transparent PNG output",
+      "Custom background colors",
+    ],
+    href: "/bg-remover",
+    status: "available",
+    gradient: "from-rose-500 to-rose-600",
+    icon: FileImage,
+  },
+  {
     id: "passport-photo",
     title: "Passport Photo Maker",
     description: "Create pro passport photos with AI background removal and custom grids",
