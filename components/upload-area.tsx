@@ -1,18 +1,23 @@
 import { Upload, CloudUpload } from "lucide-react";
 import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 type TProps = {
   isDragging: boolean;
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
   handleFileInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleFiles: (files: File[]) => void;
+  highlights?: string[];
 };
+
+const defaultHighlights = ["Multi-select", "High quality", "Batch mode"];
 
 export default function UploadArea({
   isDragging,
   setIsDragging,
   handleFileInput,
   handleFiles,
+  highlights = defaultHighlights,
 }: TProps) {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -83,17 +88,21 @@ export default function UploadArea({
           </label>
         </Button>
 
-        <div className="pt-4 flex items-center justify-center gap-6 text-xs text-muted-foreground font-medium">
-          <span className="flex items-center gap-1.5">
-            <span className="w-1 h-1 rounded-full bg-primary" /> Multi-select
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-1 h-1 rounded-full bg-accent" /> High quality
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-1 h-1 rounded-full bg-primary" /> Batch mode
-          </span>
-        </div>
+        {highlights && (
+          <div className="pt-4 flex items-center justify-center gap-6 text-xs text-muted-foreground font-medium">
+            {highlights.map((highlight, index) => (
+              <span key={highlight} className="flex items-center gap-1.5">
+                <span
+                  className={cn(
+                    "w-1.5 h-1.5 rounded-full shrink-0",
+                    index % 2 === 0 ? "bg-primary" : "bg-accent"
+                  )}
+                />
+                {highlight}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

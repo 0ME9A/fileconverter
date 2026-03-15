@@ -74,4 +74,14 @@ export const TOOLS: TToolCard[] = [
     gradient: "from-teal-500 to-teal-600",
     icon: FileImage,
   },
+  {
+    id: "passport-photo",
+    title: "Passport Photo Maker",
+    description: "Create pro passport photos with AI background removal and custom grids",
+    features: ["AI BG Removal", "Custom Grids", "Print-ready PDF", "Direct Print"],
+    href: "/passport-photo-maker",
+    status: "available",
+    gradient: "from-amber-500 to-orange-600",
+    icon: FileImage,
+  },
 ];
