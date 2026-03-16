@@ -4,6 +4,8 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
 
+import { ToolSearch } from "./tool-search";
+
 export default function Navbar() {
   return (
     <nav className="navbar sticky top-0 z-50 glass border-b border-white/10">
@@ -23,7 +25,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          <div className="flex items-center gap-1 sm:gap-8">
+          <div className="flex items-center gap-1 sm:gap-6">
             <div className="hidden md:flex items-center gap-6">
               {[
                 { href: "/about", label: "About" },
@@ -42,9 +44,9 @@ export default function Navbar() {
               ))}
             </div>
 
-            <div className="flex items-center gap-3">
-              <ThemeToggle />
-              <div className="h-6 w-px bg-border/50 hidden sm:block mx-2" />
+            <div className="flex items-center gap-2 sm:gap-4 ml-4">
+              <ToolSearch />
+              <div className="h-6 w-px bg-border/50 hidden md:block mx-1" />
               <Button
                 asChild
                 size="sm"
