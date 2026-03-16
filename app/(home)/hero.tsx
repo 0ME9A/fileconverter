@@ -90,7 +90,9 @@ export default function Hero() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-white/20 text-sm font-semibold hero-badge shadow-glow animate-bounce-slow">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-gradient">Next-Gen File Conversion</span>
+            <span className="text-gradient">
+              New: AI Background Remover is Live!
+            </span>
           </div>
 
           {/* Main Heading */}
@@ -111,14 +113,19 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-5 justify-center items-center hero-cta">
-            <Button size="lg" asChild>
-              <Link href="/webp-converter" className="gap-3">
+            <Button size="lg" asChild className="rounded-full group ring-2 ring-primary/40">
+              <Link href="/tools">
                 Get Started Free
-                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/tools">Explore Tools</Link>
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="rounded-full"
+            >
+              <Link href="/#tools">Explore Tools</Link>
             </Button>
           </div>
 

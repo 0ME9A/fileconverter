@@ -39,17 +39,24 @@ export default function ToolCard({ data, className }: TProps) {
           >
             <Icon className="size-7 text-white" />
           </div>
-          {isAvailable ? (
-            <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              Active
-            </div>
-          ) : (
-            <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted px-2.5 py-1 rounded-full border border-border">
-              <Clock className="w-3 h-3" />
-              Later
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            {data.isNew && (
+              <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-white bg-linear-to-r from-rose-500 to-orange-500 px-2.5 py-1 rounded-full shadow-sm animate-pulse">
+                New
+              </div>
+            )}
+            {isAvailable ? (
+              <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                Active
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted px-2.5 py-1 rounded-full border border-border">
+                <Clock className="w-3 h-3" />
+                Later
+              </div>
+            )}
+          </div>
         </div>
         <div className="space-y-2">
           <CardTitle className="text-xl font-bold tracking-tight group-hover:text-primary transition-colors">

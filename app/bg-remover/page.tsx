@@ -121,7 +121,10 @@ export default function BGRemoverPage() {
         );
 
         try {
+          const startTime = performance.now();
           const blob = await processImage(image);
+          const endTime = performance.now();
+
           setImages((prev) =>
             prev.map((img) =>
               img.id === image.id
@@ -134,6 +137,17 @@ export default function BGRemoverPage() {
                 : img,
             ),
           );
+
+          // Log individual conversion stat
+          logConversionStat({
+            originalType: image.file.type || "image/png",
+            convertedType:
+              image.options.backgroundColor === "transparent"
+                ? "image/png"
+                : "image/jpeg",
+            processingTime: Math.round(endTime - startTime),
+            fileSize: image.file.size,
+          });
         } catch (error) {
           setImages((prev) =>
             prev.map((img) =>
@@ -144,14 +158,6 @@ export default function BGRemoverPage() {
       }
     }
     confetti();
-
-    // Log conversion stat (approximate)
-    logConversionStat({
-      originalType: "multi-images",
-      convertedType: "bg-removed",
-      processingTime: 0,
-      fileSize: images.reduce((acc, img) => acc + (img.outputSize || 0), 0),
-    });
   };
 
   const viewImage = (image: TImageFile) => {

@@ -44,7 +44,7 @@ export default function Tools() {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {TOOLS.map((tool) => (
+          {TOOLS.slice(0, 6).map((tool) => (
             <ToolCard key={tool.id} data={tool} />
           ))}
         </div>

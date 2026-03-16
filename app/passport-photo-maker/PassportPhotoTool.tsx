@@ -77,6 +77,7 @@ export default function PassportPhotoTool() {
   const [isRemovingBg, setIsRemovingBg] = useState(false);
   const [bgProgress, setBgProgress] =
     useState<BackgroundRemovalProgress | null>(null);
+  const [originalMimeType, setOriginalMimeType] = useState<string | null>(null);
 
   const goBack = () => {
     if (step === "process") setStep("upload");
@@ -175,6 +176,7 @@ export default function PassportPhotoTool() {
 
   const onFileSelect = useCallback((files: File[]) => {
     if (files.length > 0) {
+      setOriginalMimeType(files[0].type);
       const reader = new FileReader();
       reader.onload = (e) => {
         setOriginalImage(e.target?.result as string);
@@ -343,7 +345,7 @@ export default function PassportPhotoTool() {
 
     // Log Conversion Stat
     logConversionStat({
-      originalType: "image",
+      originalType: originalMimeType || "image/jpeg",
       convertedType: "passport-sheet",
       processingTime: 0, // Not explicitly tracked here
       fileSize: 0, // Not easily available from jsPDF blob here
@@ -832,7 +834,7 @@ export default function PassportPhotoTool() {
               </div>
             </div>
           ) : (
-            <div className="col-span-2 border border-background/50 rounded-md flex items-center justify-center p-8 bg-background/30 backdrop-blur-sm">
+            <div className="col-span-3 lg:col-span-2 border border-background/50 rounded-md flex items-center justify-center p-8 bg-background/30 backdrop-blur-sm">
               <InformativeMessage messages={INFORMATIVE_MESSAGES} />
             </div>
           )}

@@ -87,6 +87,7 @@ export type TToolCard = {
   features: string[];
   gradient: string;
   icon: LucideIcon;
+  isNew?: boolean;
 };
 
 // trust
