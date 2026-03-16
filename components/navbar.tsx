@@ -48,10 +48,10 @@ export default function Navbar() {
               <Button
                 asChild
                 size="sm"
-                className="hidden sm:flex px-5 shadow-glow hover:shadow-primary/40 transition-shadow"
+                className="hidden sm:flex shadow-glow hover:shadow-primary/40 transition-shadow rounded-full"
               >
                 <Link href="/contact" className="gap-2">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Sparkles />
                   Contact Us
                 </Link>
               </Button>

@@ -3,6 +3,33 @@ import { TToolCard } from "../ts";
 
 export const TOOLS: TToolCard[] = [
   {
+    id: "bg-remover",
+    title: "AI Background Remover",
+    description:
+      "Remove backgrounds from multiple images at once using advanced AI. Support for custom background colors.",
+    features: [
+      "Batch AI removal",
+      "Transparent PNG output",
+      "Custom background colors",
+    ],
+    href: "/bg-remover",
+    status: "available",
+    isNew: true,
+    gradient: "from-rose-500 to-rose-600",
+    icon: FileImage,
+  },
+  {
+    id: "passport-photo",
+    title: "Passport Photo Maker",
+    description: "Create pro passport photos with AI background removal and custom grids",
+    features: ["AI BG Removal", "Custom Grids", "Print-ready PDF", "Direct Print"],
+    href: "/passport-photo-maker",
+    status: "available",
+    isNew: true,
+    gradient: "from-amber-500 to-orange-600",
+    icon: FileImage,
+  },
+  {
     id: "webp",
     title: "Image to WebP",
     description:
@@ -72,31 +99,6 @@ export const TOOLS: TToolCard[] = [
     features: ["Multiple formats", "High quality"],
     status: "coming-soon",
     gradient: "from-teal-500 to-teal-600",
-    icon: FileImage,
-  },
-  {
-    id: "bg-remover",
-    title: "AI Background Remover",
-    description:
-      "Remove backgrounds from multiple images at once using advanced AI. Support for custom background colors.",
-    features: [
-      "Batch AI removal",
-      "Transparent PNG output",
-      "Custom background colors",
-    ],
-    href: "/bg-remover",
-    status: "available",
-    gradient: "from-rose-500 to-rose-600",
-    icon: FileImage,
-  },
-  {
-    id: "passport-photo",
-    title: "Passport Photo Maker",
-    description: "Create pro passport photos with AI background removal and custom grids",
-    features: ["AI BG Removal", "Custom Grids", "Print-ready PDF", "Direct Print"],
-    href: "/passport-photo-maker",
-    status: "available",
-    gradient: "from-amber-500 to-orange-600",
     icon: FileImage,
   },
 ];

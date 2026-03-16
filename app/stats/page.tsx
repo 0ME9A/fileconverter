@@ -162,7 +162,9 @@ export default function StatsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold uppercase">
-                {stats?.formats[0]?.type.split("/")[1] || "None"}
+                {stats?.formats[0]?.type.includes("/")
+                  ? stats.formats[0].type.split("/")[1]
+                  : stats?.formats[0]?.type || "None"}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 Most used target
@@ -184,7 +186,7 @@ export default function StatsPage() {
                 <div key={f.type} className="group">
                   <div className="flex justify-between mb-1 text-sm">
                     <span className="font-medium uppercase">
-                      {f.type.split("/")[1]}
+                      {f.type.includes("/") ? f.type.split("/")[1] : f.type}
                     </span>
                     <span className="text-muted-foreground">
                       {f.count} files
@@ -226,11 +228,15 @@ export default function StatsPage() {
                       <div>
                         <p className="text-sm font-medium">
                           <span className="uppercase">
-                            {r.originalType.split("/")[1]}
+                            {r.originalType.includes("/")
+                              ? r.originalType.split("/")[1]
+                              : r.originalType}
                           </span>
                           <span className="mx-2 text-muted-foreground">→</span>
                           <span className="uppercase text-primary">
-                            {r.convertedType.split("/")[1] || "ICO"}
+                            {r.convertedType.includes("/")
+                              ? r.convertedType.split("/")[1]
+                              : r.convertedType || "ICO"}
                           </span>
                         </p>
                         <p className="text-[10px] text-muted-foreground uppercase opacity-70">
