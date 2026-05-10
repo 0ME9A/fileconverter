@@ -89,6 +89,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/format-converter`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
 
     // Stats
     {

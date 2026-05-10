@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { formatFileSize } from "@/app/_src/utils";
+import { StatsData } from "@/app/type/common";
 
 interface StatsCounterProps {
   type?: "totalFiles" | "totalSize" | "avgTime";
@@ -14,26 +15,32 @@ export default function StatsCounter({
   className = "text-xl font-black text-primary",
   showSuffix = false,
 }: StatsCounterProps) {
-  const [displayValue, setDisplayValue] = useState<string>("0");
+  const [res, setRes] = useState<StatsData | null>(null);
 
   useEffect(() => {
     fetch("/api/stats")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          if (type === "totalFiles") {
-            setDisplayValue(
-              data.totalFiles.toLocaleString() + (showSuffix ? " Files" : ""),
-            );
-          } else if (type === "totalSize") {
-            setDisplayValue(formatFileSize(data.totalSize));
-          } else if (type === "avgTime") {
-            setDisplayValue(data.avgTime + (showSuffix ? "ms" : ""));
-          }
-        }
-      })
-      .catch(() => setDisplayValue("0"));
-  }, [type, showSuffix]);
+      .then((r) => r.json())
+      .then((data) => setRes(data))
+      .catch((e) => console.error(e));
+  }, []);
 
-  return <span className={className}>{displayValue}</span>;
+  if (!res || !res.success) return <span className={className}>0</span>;
+
+  if (type === "totalFiles") {
+    return (
+      <span className={className}>
+        {res.totalFiles.toLocaleString() + (showSuffix ? " Files" : "")}
+      </span>
+    );
+  } else if (type === "totalSize") {
+    return <span className={className}>{formatFileSize(res.totalSize)}</span>;
+  } else if (type === "avgTime") {
+    return (
+      <span className={className}>
+        {res.avgTime + (showSuffix ? "ms" : "")}
+      </span>
+    );
+  }
+
+  return <span className={className}>0</span>;
 }
