@@ -1,4 +1,4 @@
-import { Schema, model, models } from "mongoose";
+import mongoose, { Schema, model, models } from "mongoose";
 
 export interface IStat {
   originalType: string;
@@ -25,10 +25,6 @@ const StatSchema = new Schema<IStat>({
   },
   timestamp: { type: Date, default: Date.now },
 });
-
-// Index speeds up the $group aggregation on fileSize / processingTime
-StatSchema.index({ timestamp: -1 });
-StatSchema.index({ fileSize: 1, processingTime: 1 });
 
 const Stat = models.Stat || model<IStat>("Stat", StatSchema);
 
