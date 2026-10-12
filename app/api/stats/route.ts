@@ -25,35 +25,34 @@ export async function GET() {
   try {
     await dbConnect();
 
-    // Use aggregation for better insights
-    const [counts, formatData, sizeData, recentConversions] = await Promise.all(
-      [
-        Stat.countDocuments(),
-        Stat.aggregate([
-          { $group: { _id: "$convertedType", count: { $sum: 1 } } },
-          { $sort: { count: -1 } },
-        ]),
-        Stat.aggregate([
-          {
-            $group: {
-              _id: null,
-              totalSize: { $sum: "$fileSize" },
-              avgTime: { $avg: "$processingTime" },
-            },
+    // Only run the two queries we actually need (dropped formatData & recentConversions)
+    const [counts, sizeData] = await Promise.all([
+      Stat.countDocuments(),
+      Stat.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalSize: { $sum: "$fileSize" },
+            avgTime: { $avg: "$processingTime" },
           },
-        ]),
-        Stat.find().sort({ timestamp: -1 }).limit(10),
-      ],
-    );
+        },
+      ]),
+    ]);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       totalFiles: counts,
       totalSize: sizeData[0]?.totalSize || 0,
       avgTime: Math.round(sizeData[0]?.avgTime || 0),
-      formats: formatData.map((f) => ({ type: f._id, count: f.count })),
-      recent: recentConversions,
     });
+
+    // Cache for 60 s on the CDN/browser; stale-while-revalidate up to 300 s
+    response.headers.set(
+      "Cache-Control",
+      "public, s-maxage=60, stale-while-revalidate=300",
+    );
+
+    return response;
   } catch (error: unknown) {
     const message =
       error instanceof Error ? error.message : "Failed to get stats";
