@@ -6,6 +6,8 @@ import Trust from "./trust";
 import Hero from "./hero";
 import GlobalImpact from "./global-impact";
 import CTASection from "./cta";
+import HowItWorks from "./how-it-works";
+import WhyBrowser from "./why-browser";
 import gsap from "gsap";
 import FAQSection from "@/components/faq-section";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -33,7 +35,10 @@ export default function HomePage() {
     <div ref={containerRef} className="min-h-screen bg-background">
       <Hero />
       <GlobalImpact />
+      <HowItWorks />
+      <div className="max-w-6xl mx-auto border-b"/>
       <Tools />
+      <WhyBrowser />
       <Trust />
       <FAQSection />
 
