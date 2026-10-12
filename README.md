@@ -1,66 +1,82 @@
-# i-Master | Next-Gen File Conversion
+# FileConverter (i-Master) | Next-Gen In-Browser File Conversion
 
-**i-Master** is a high-performance, privacy-focused file conversion platform built with modern web technologies. Unlike traditional converters, i-Master performs all processing locally in your browser, ensuring your data never leaves your device.
+**FileConverter** is a high-performance, privacy-first file conversion and processing platform built with modern web technologies. Unlike traditional cloud converters, FileConverter performs all processing locally inside your browser using client-side APIs and WebAssembly — ensuring your files and data never touch a remote server.
+
+---
 
 ## 🚀 Key Features
 
-- **100% Private**: Zero server uploads. Files are processed locally using advanced browser-based APIs.
-- **Instant Speed**: No upload or download delays. Conversion happens at the speed of your hardware.
-- **Multiple Formats**: Support for WebP, JPG, PNG, ICO, and more.
-- **Premium UI/UX**: A stunning, responsive interface with smooth GSAP animations and Tailwind CSS 4.
-- **Batch Processing**: Efficiently handle multiple files simultaneously (Coming Soon).
+- 🔒 **100% Client-Side Privacy**: Zero server uploads. Your files never leave your device, ensuring maximum confidentiality and security.
+- ⚡ **Instant Processing**: Bypass upload and download queues entirely. Conversion runs at the full speed of your local hardware.
+- 🛠️ **Universal Tool Search**: Command-palette search (`Ctrl+K` or `/`) to quickly find and launch any conversion or editing tool.
+- 📋 **How It Works Flow**: Intuitive, step-by-step guidance from dropping files to configuring settings and instant downloading.
+- ⚖️ **Browser vs. Cloud Comparison**: Clear matrix illustrating the privacy, offline capability, speed, and unlimited size benefits over traditional cloud-based converters.
+- 📊 **Real-Time Privacy Impact**: High-performance cached stats showing total files processed and privacy preserved worldwide.
+- 🎨 **State-of-the-Art UI/UX**: Fluid GSAP scroll animations, sleek dark/light mode support, and modernized Tailwind CSS 4 styling.
+- 📁 **Extensive Format Support**: WebP, PNG, JPG, ICO, PDF, SVG, AVIF, and more.
+
+---
 
 ## 🛠️ Tech Stack
 
 - **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
-- **UI Library**: [React 19](https://reactjs.org/)
+- **UI Library**: [React 19](https://react.dev/)
 - **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
-- **Animations**: [GSAP](https://greensock.com/gsap/) with [`@gsap/react`](https://greensock.com/react/)
+- **Animations**: [GSAP](https://gsap.com/) & [`@gsap/react`](https://gsap.com/resources/React/) with ScrollTrigger
+- **Primitives**: [Radix UI](https://www.radix-ui.com/)
 - **Icons**: [Lucide React](https://lucide.dev/)
+- **Database / Analytics**: [MongoDB](https://www.mongodb.com/) with Mongoose
 - **Validation**: [Zod](https://zod.dev/)
+
+---
 
 ## 🏁 Getting Started
 
 ### Prerequisites
 
-- Node.js (v24.x or higher recommended)
-- npm, yarn, pnpm, or bun
+- Node.js (v20.x or higher recommended)
+- npm, pnpm, or yarn
 
 ### Local Development
 
-1.  **Clone the repository**:
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/0ME9A/fileconverter.git
+   cd fileconverter
+   ```
 
-    ```bash
-    git clone [repository-url]
-    cd i-master
-    ```
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-2.  **Install dependencies**:
+3. **Set up environment variables**:
+   Create a `.env.local` file in the root directory:
+   ```env
+   MONGODB_URI=your_mongodb_connection_string
+   ```
 
-    ```bash
-    npm install
-    ```
+4. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
 
-3.  **Run the development server**:
+5. **Open the application**:
+   Navigate to [http://localhost:3000](http://localhost:3000) to view the app.
 
-    ```bash
-    npm run dev
-    ```
+---
 
-4.  **Open the app**:
-    Navigate to [http://localhost:3000](http://localhost:3000) to see the application in action.
-
-## 📦 Build & Deployment
+## 📦 Build & Production
 
 To create an optimized production build:
 
 ```bash
 npm run build
-npm start
+npm run start
 ```
-
-The project is ready for deployment on the [Vercel Platform](https://vercel.com/new).
 
 ---
 
-Built with ❤️ for privacy and performance.
+## 📄 License
+
+Built with ❤️ for privacy, performance, and open web standards.
