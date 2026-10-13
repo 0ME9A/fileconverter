@@ -38,11 +38,15 @@ export default function StatsPage() {
   const counterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch("/api/stats")
+    fetch("/api/stats?full=1")
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          setStats(data);
+          setStats({
+            ...data,
+            formats: data.formats ?? [],
+            recent: data.recent ?? [],
+          });
         }
       })
       .catch((err) => console.error("Failed to fetch stats:", err))
@@ -162,9 +166,11 @@ export default function StatsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold uppercase">
-                {stats?.formats[0]?.type.includes("/")
-                  ? stats.formats[0].type.split("/")[1]
-                  : stats?.formats[0]?.type || "None"}
+                {(() => {
+                  const fmt = stats?.formats?.[0]?.type;
+                  if (!fmt) return "None";
+                  return fmt.includes("/") ? fmt.split("/")[1] : fmt;
+                })()}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 Most used target
